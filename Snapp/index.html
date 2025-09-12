@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snapp Index</title>
+</head>
+<body>
+    <div id="Snapp-Body">ttt
+    </div>
+</body>
+<script type="module">
+    import Snapp from './src/Snapp.js'
+    import App from './src/index.js'
+
+    const snappBody = document.querySelector("#Snapp-Body");
+    Snapp.render(snappBody, App());
+</script>
+</html>
