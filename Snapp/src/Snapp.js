@@ -1,50 +1,62 @@
 
 const Snapp = {
   create: (element, props, ...children) => {
+
     const flatChildren = flattenChildren(children);
+
     if (element != "<>" && typeof element === "string") {
-
       return createElement(element, props, flatChildren);
-
-    } else if (typeof element === 'function') {
-
+    }
+    else if (typeof element === 'function') {
       return createComponent(element, props, flatChildren);
-      
-    } else if (element === "<>") {
+    }
+    else if (element === "<>") {
         return createFragment(flatChildren);
     }
+
   },
+
+  // Render Helper
 
   render: (body, App) => {
-    // console.log(App)
     body.replaceChildren(App);
+    document.dispatchEvent(new Event("DOM"))
+    console.log(App)
   },
-
+  
   append: (body, App) => {
     body.append(App)
+    document.dispatchEvent(new Event("DOM"))
   },
-
+  
   prepend: (body, App) => {
     body.prepend(App)
+    document.dispatchEvent(new Event("DOM"))
   },
-
+  
   before: (body, App) => {
     body.before(App)
+    document.dispatchEvent(new Event("DOM"))
   },
-
+  
   after: (body, App) => {
     body.after(App)
+    document.dispatchEvent(new Event("DOM"))
   },
-
+  
   empty: (body) => {
     body.replaceChildren();
+    document.dispatchEvent(new Event("EMPTY"))
   },
-
+  
   remove: (body) => {
     body.remove()
+    document.dispatchEvent(new Event("REMOVE"))
   }
-//  Next one
 
+  // Runtime helpper
+
+  
   
 }
 
@@ -57,7 +69,7 @@ const createElement = (element, props, children) => {
   }
   
   children.map(node => {
-    if (typeof node === 'string' || typeof node === 'number' || node instanceof Element) {
+    if (typeof node === 'string' || typeof node === 'number' || node instanceof Element ||  node instanceof DocumentFragment) {
         ele.append(node);
     }
   });
@@ -66,14 +78,17 @@ const createElement = (element, props, children) => {
 }
 
 const createFragment = (children) => {
-  const frg = document.createDocumentFragment();
+  const frag = document.createDocumentFragment();
 
   children.map(node => {
-    if (typeof node === 'string' || typeof node === 'number' || node instanceof Element) {
-        frg.append(node);
+    console.log(typeof node, node)
+    if (typeof node === 'string' || typeof node === 'number' || node instanceof Element || node instanceof DocumentFragment) {
+        frag.append(node);
     }
-  });  
-return frg;
+  });
+
+  console.log("Fragmeent: ", frag instanceof DocumentFragment)
+  return frag;
 }
 
 const createComponent = (element, props, children) => {

@@ -4,17 +4,17 @@ import { Button, FullButton } from "./component/Button";
 const App = () => {
     const hello = "Hello Workd";
     const chk = "<h1>Hello</h1>";
-    const btn = <Button type={300 * 500}>Click Me</Button>
+    const btn = <Button />;
 
     return (
-        <>
+        <div>
             <Hello id={hello} /> 400 {btn}
-            <Div>
+            <Div> jjjj
                 <FullButton>
                     Hello Fragment {chk}
                 </FullButton>
             </Div>
-        </>
+        </div>
     );
 };
 
