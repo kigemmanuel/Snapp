@@ -7,14 +7,14 @@ const App = () => {
     const btn = <Button type={300 * 500}>Click Me</Button>
 
     return (
-        <div>
+        <>
             <Hello id={hello} /> 400 {btn}
             <Div>
                 <FullButton>
                     Hello Fragment {chk}
                 </FullButton>
             </Div>
-        </div>
+        </>
     );
 };
 

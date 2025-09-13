@@ -11,7 +11,7 @@ const Snapp = {
       return createComponent(element, props, flatChildren);
       
     } else if (element === "<>") {
-        return flatChildren;
+        return createFragment(flatChildren);
     }
   },
 
@@ -63,6 +63,17 @@ const createElement = (element, props, children) => {
   });
 
   return ele;
+}
+
+const createFragment = (children) => {
+  const frg = document.createDocumentFragment();
+
+  children.map(node => {
+    if (typeof node === 'string' || typeof node === 'number' || node instanceof Element) {
+        frg.append(node);
+    }
+  });  
+return frg;
 }
 
 const createComponent = (element, props, children) => {
