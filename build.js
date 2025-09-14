@@ -50,7 +50,7 @@ try {
     sourcemap: false,
     minify: false,
     banner: {
-      js: "import Snapp from './Snapp.js';"
+      js: "import snapp from '../Snapp.js';"
     },
     plugins: [{
       name: 'build-notifier',

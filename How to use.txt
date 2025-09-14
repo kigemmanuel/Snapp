@@ -1,0 +1,95 @@
+
+Guide
+To start snapp!!!
+in your html
+file: index.html
+<div id="Snapp-Body"></div>
+<script type="module">
+    import snapp from './Snapp.js' // import snapp
+    import App from './src/index.js' // import your entery point
+
+    const snappBody = document.querySelector("#Snapp-Body");
+    snapp.render(snappBody, App()); // Start snapp
+</script>
+
+You can also inject varibale into your snapp app
+
+const inject = "kigemmanuel";
+snapp.render(snappBody, App(inject))
+
+Then in your index.js
+
+export default const App = (inject) => {
+    alert(inject) // kigemmanuel
+}
+
+This is usesfull if you want inject varibale from backend whiling the file
+But snapp is already SEO friend!!!
+
+news.html
+index.html
+login.html
+
+you can add your static template
+using snapp helper function!
+
+snapp.render Example:
+
+snapp.render(parentElement, component, type) // To render a component
+snapp.render(parentElement, component, 'append') // Will append
+
+snapp.render(parentElement, component) // Default will replace what is on parentElement
+
+snapp.on Example:
+
+snapp.on(event, callBack)
+snapp.on("DOM", callBack) // the callBack will run once the element is ready
+
+snapp.select Example:
+
+snapp.select() for single element
+snapp.select([]) for multiple element return [array]
+
+snapp.event Example:
+
+const loadNewMsg = snapp.event(eventName, eventType, callBack)
+<div id="loadMsg" event{{
+    click: [loadNewMsg]
+}}></div>
+Also you can pass parameter to your event!!
+
+const loginBtn = snapp.event(eventName, eventType, (e, param) => {
+    // e is the element that was click, e.target
+    // param is for parameter
+
+    console.log(param) // {id: 36392375923, name: "something"}
+})
+<div event={{
+    click: [loginBtn, {
+        id: 36392375923,
+        name: "something"
+    }]
+}}></div>
+Intertingly any time an element is remove from dom we also remove that element event instance
+But the snapp.event will still be avalible to all other unless you remove it by using snapp.remove(loginBtn)
+Note: using snapp.event is global to all element and component
+'eventName' should be unique for all event but you can overwrite an evnt using the same name and true object
+To overwrite snapp.event use true
+
+const loginBtn = snapp.event(eventName, eventType, (e, param) => {
+    // overwrite old  event
+}, true)
+
+onClick / onclick Example:
+<button onclick={() => alert("Hello Snapp")}>Call Hello snapp</button>
+<button onClick={() => login()}>Login</button>
+<button onclick={() => {
+    // Do something
+    // Do something
+    // Do something
+}}>Login</button>
+
+Using snapp.event is a choice but its good if you have many button to have one event listner
+snapp.event uses evnt delegation method it add more event to the document this is good for heavy app!!
+You can also use click use onClick/onclick, oninput....snapp in freedom your choice
+

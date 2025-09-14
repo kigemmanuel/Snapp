@@ -1,42 +1,41 @@
-
-import { Button, FullButton } from "./component/Button";
+import { Button } from "./components/Button.jsx";
 
 const App = () => {
-    const hello = "Hello Workd";
-    const chk = "<h1>Hello</h1>";
-    const btn = <Button />;
+    const loadInput = snapp.event("loadInput", "click", (e, param) => {
+        console.log("Param: ", param)
+    })
+
+    const inputing = snapp.event("loadInput", "input", (e, param) => {
+        console.log(e.target.value)
+        console.log(param.id)
+    })
+
+    const btn = <button event={{click: [loadInput, {key: "Wow"}]}}>Hello Button</button>;
+
+    snapp.on("DOM", () => {
+        const body = snapp.select("#wow")
+        snapp.render(body, btn)
+    })
+
+    function name(params) {
+        console.log(params)
+    }
 
     return (
-        <div>
-            <Hello id={hello} /> 400 {btn}
-            <Div> jjjj
-                <FullButton>
-                    Hello Fragment {chk}
-                </FullButton>
-            </Div>
+        <>
+        <div className="result">Woooooo</div>
+        <input 
+            event={{
+                click: [loadInput, {msg: "Hello World"}],
+                input: [inputing, {id: 300}]
+            }}
+            type="text" id="name"
+        />
+        <div id="wow">
+            <button on="okok" event={{click: [loadInput, {key: "Wow"}]}}>Hello Button</button>
         </div>
-    );
-};
-
-const Div = (props) => {
-    return (
-        <div class="name">
-            {props.props}
-        </div>
-    )
-}
-
-const Hello = (props) => {
-
-    const text = [1, 2, 3, 4, 5]
-
-    return (
-        <h1 id={props.id} props={30 + 400}>
-            Hello Every Emmanuel
-            {text.map(val => {
-                return val
-            })}
-        </h1>
+        <button onclick={() => name("Working......!")}>Hello People</button>
+        </>
     );
 };
 
