@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { context } from 'esbuild';
 import { readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
@@ -20,7 +22,7 @@ const getTopLevelEntries = (dir) => {
       }
     }
   } catch (error) {
-    console.error(`Error reading view directory: ${error.message}`);
+    console.error(`Error reading view directory: ${error.message}`, "Is this a snapp project!");
   }
   
   return entries;

@@ -13,7 +13,7 @@ const App = () => {
 
     return (
         <>
-        <h2 css={style} id="ij">Hello Snapp</h2>
+        <h2 css={style} id="ij">Hello Snapp, Hey Emmanule</h2>
         </>
     )
 };

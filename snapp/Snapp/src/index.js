@@ -9,7 +9,7 @@ var App = () => {
     "padding": "20px",
     border: "1px solid black"
   });
-  return /* @__PURE__ */ snapp.create("<>", null, /* @__PURE__ */ snapp.create("h2", { css: style, id: "ij" }, "Hello Snapp"));
+  return /* @__PURE__ */ snapp.create("<>", null, /* @__PURE__ */ snapp.create("h2", { css: style, id: "ij" }, "Hello Snapp, Hey Emmanule"));
 };
 var index_default = App;
 export {

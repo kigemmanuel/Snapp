@@ -1,0 +1,14 @@
+{
+  "name": "snapp-build",
+  "version": "1.0.0",
+  "description": "Build tool for Snapp apps",
+  "bin": {
+    "snapp-build": "./build.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "esbuild": "^0.25.9"
+  },
+  "author": "kigemmanuel",
+  "license": "MIT"
+}
