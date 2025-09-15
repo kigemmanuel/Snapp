@@ -81,10 +81,8 @@ const loginBtn = snapp.event(eventName, eventType, (e, param) => {
 }, true)
 snapp.remove([loginBtn]); // This will remove the event!
 snapp.remove([loginBtn, anotherEvent])
-
-Deep delection
-snapp.remove([loginBtn], true) // This will remove the event also parameter of all element connected to it
-If you plan to add the event later do do not use deep delection
+Anytime you remove a evnet all element parameter that is attached to it gets cleanup!
+Also the event delection also get cleanup if no event is listening to it!
 
 onClick / onclick Example:
 The eventListner will be added to the element!
@@ -99,7 +97,6 @@ The eventListner will be added to the element!
 
 Snapp cleanup: Snapp keeps track of each element and eventListner!
 If an element is removed from the DOM, Snapp will remove all eventListner of that element
-
 
 Snapp attribute Example:
 Note snapp follows html attribute for sosmething 'double click' its same as html dblclick using doubleClick won't wotk!!
@@ -124,5 +121,3 @@ snapp.remove([msgBody]) // Will remove msgBody from the dom
 const syaHello = snapp.event(eventName, eventType, evnt)
 snapp.remove([syaHello]) // Will remove the event
 snapp.remove([msgBody, feedBody, syaHello]) // will reomve msgBody, feedBody from DOM and remove syaHello event
-
-When you remove an event with option true all element parameter refrence to it will be deleted too!!

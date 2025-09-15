@@ -4,9 +4,11 @@ const snapp = (() => {
 
   var dataCount = 0;
   var eventId = 0;
+
   const elementEvent = {};
   const globalEvent = {};
-  const globalParamater = {};
+  const eventListners = {};
+  const globalParameter = {};
   const elementEventMap = {};
 
   const create = (element, props, ...children) => {
@@ -23,19 +25,25 @@ const snapp = (() => {
   }
 
   const render = (body, App, type) => {
+    
+    if (!document.contains(body)) {
+      console.error("ERROR: Rending to a non existing/removed element", body)
+      return;
+    }
+
     switch (true) {
       case (type === "before"):
         body.before(App);
         break;
-
-      case (type === "prepend"):
-        body.prepend(App);
+        
+        case (type === "prepend"):
+          body.prepend(App);
         break;
-
-      case (type === "replace"):
+        
+        case (type === "replace"):
         body.replaceWith(App);
         break;
-
+        
       case (type === "append"):
         body.append(App);
         break;
@@ -48,20 +56,26 @@ const snapp = (() => {
         body.replaceChildren(App);
         break;
       }
+
     document.dispatchEvent(new Event("DOM"))
   }
 
-  const remove = (items, option) => {
+  const remove = (items) => {    
     items.forEach(item => {
       if (item instanceof Element) {
         item.remove()
       } else if (typeof item === "object") {
         const {eventType, eventName} = item;
-        // console.log(globalParamater, globalEvent, eventName, eventType)
-        if (option === true) {
-          delete globalParamater[eventName]
-        }
         delete globalEvent[eventType][eventName]
+
+        if (Object.keys(globalEvent[eventType]).length === 0) {
+          document.removeEventListener(eventType, eventListners[eventType]); 
+          
+          delete globalEvent[eventType]
+          delete eventListners[eventType]
+        }
+
+        delete globalParameter[eventName]
       }
     })
   }
@@ -93,27 +107,27 @@ const snapp = (() => {
   const event = (eventType, callBack, replace = false) => {
     eventId++
 
-    let eventName = `evnet-${eventId}`;
+    let eventName = `event-${eventId}`;
     
     if (!(eventType in globalEvent)) {
       globalEvent[eventType] = [];
-      
-      document.addEventListener(eventType, (element) => {
-        
+    
+      const eventTemp = (element) => {
         const name = element.target.getAttribute("snapp-e-"+eventType);
         const dataEvent = element.target.getAttribute("snapp-data");
-        
         if (globalEvent[eventType][name]) {
-
-          const parameter = globalParamater[name]?.[dataEvent];
+          const parameter = globalParameter[name]?.[dataEvent];
           globalEvent[eventType][name](element, parameter);
         }
-      })
+      }
+      
+      eventListners[eventType] = eventTemp;
+      document.addEventListener(eventType, eventListners[eventType])
     }
 
     if (globalEvent[eventType][eventName] && !replace) {
 
-      console.warn(`REJECT: Can not add event with already existing name "${name}", use 'true' to replace`);
+      console.warn(`REJECT: Can not add event with already existing name "${eventName}", use 'true' to replace`);
       return "REJECT"
     }
 
@@ -167,21 +181,24 @@ const snapp = (() => {
               const {eventType, eventName} = event[0];
               ele.setAttribute("snapp-e-"+eventType, eventName);
               
-              globalParamater[eventName] = globalParamater[eventName] || {}
-              globalParamater[eventName][dataCount] = parameter;
+              globalParameter[eventName] = globalParameter[eventName] || {}
+              globalParameter[eventName][dataCount] = parameter;
               elementEventMap[dataCount].push(eventName)
             })
-  
             continue;
           }
-
-          ele.setAttribute(key, value)
+          
+          ele.key, escapeAttr(value);
         }
     }
     
-    children.map(node => {
+    children.forEach(node => {
       if (typeof node === 'string' || typeof node === 'number' || node instanceof Element ||  node instanceof DocumentFragment) {
+        try {
           ele.append(node);
+        } catch (error) {
+          console.log(error)
+        }  
       }
     });
   
@@ -190,8 +207,7 @@ const snapp = (() => {
   
   const createFragment = (children) => {
     const frag = document.createDocumentFragment();
-  
-    children.map(node => {
+    children.forEach(node => {
       if (typeof node === 'string' || typeof node === 'number' || node instanceof Element || node instanceof DocumentFragment) {
           frag.append(node);
       }
@@ -221,6 +237,15 @@ const snapp = (() => {
       return final
   }
 
+  const escapeAttr = (val) => {
+    return String(val)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(element => {
       element.removedNodes.forEach(node => {
@@ -236,8 +261,8 @@ const snapp = (() => {
             }
             
             elementEventMap[dataEvent].forEach(name => {
-              if (globalParamater[name]) {
-                delete globalParamater[name][dataEvent]
+              if (globalParameter[name]) {
+                delete globalParameter[name][dataEvent]
               }
             })
             
