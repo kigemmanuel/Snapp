@@ -187,8 +187,13 @@ const snapp = (() => {
             })
             continue;
           }
+
+          if (key === "css") {
+            ele.style.cssText = value;
+            continue;
+          }
           
-          ele.key, escapeAttr(value);
+          ele[key] = escapeAttr(value);
         }
     }
     
@@ -237,6 +242,10 @@ const snapp = (() => {
       return final
   }
 
+  const css = (css) => {
+    return Object.entries(css).map(([key, value]) => `${key}: ${value}`).join(";");
+  }
+
   const escapeAttr = (val) => {
     return String(val)
       .replace(/&/g, '&amp;')
@@ -280,7 +289,7 @@ const snapp = (() => {
   })
 
   return {
-    create, render, on, select, selectAll, event, remove
+    create, render, on, select, selectAll, event, css, remove
   }
 
 })()

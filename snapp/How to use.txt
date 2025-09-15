@@ -121,3 +121,27 @@ snapp.remove([msgBody]) // Will remove msgBody from the dom
 const syaHello = snapp.event(eventName, eventType, evnt)
 snapp.remove([syaHello]) // Will remove the event
 snapp.remove([msgBody, feedBody, syaHello]) // will reomve msgBody, feedBody from DOM and remove syaHello event
+
+snapp.css Example:
+snapp.css is use to add style to an element
+
+const divStyle = snapp.css({
+    color: "red",
+    backgorund: "red"
+})
+<div css={divStyle}>This is cool</div>
+You can use "backgorund": "red" or even backgorund: "red"
+const divStyle = snapp.css({
+    "backgorund-color": "red"
+})
+More example
+const darkMode = false;
+const style = snapp.css({
+    color: darkMode ? "white" : "black",
+    "background-color": darkMode ? "black" : "white"
+)}
+<h2 css={style}>Hello Snapp</h2>
+
+
+Creator: kigemmanuel
+Free and open to issue,bugs report and your idea
