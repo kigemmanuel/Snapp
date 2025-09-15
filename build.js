@@ -44,7 +44,7 @@ try {
     format: 'esm',
     loader: { '.js': 'jsx' },
     jsx: 'transform',
-    jsxFactory: 'Snapp.create',
+    jsxFactory: 'snapp.create',
     jsxFragment: '"<>"',
     treeShaking: true,
     sourcemap: false,

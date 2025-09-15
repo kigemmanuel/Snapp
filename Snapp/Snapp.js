@@ -1,6 +1,14 @@
 
 
 const snapp = (() => {
+
+  var dataCount = 0;
+  var eventId = 0;
+  const elementEvent = {};
+  const globalEvent = {};
+  const globalParamater = {};
+  const elementEventMap = {};
+
   const create = (element, props, ...children) => {
     const flatChildren = flattenChildren(children);
     if (element != "<>" && typeof element === "string") {
@@ -16,8 +24,24 @@ const snapp = (() => {
 
   const render = (body, App, type) => {
     switch (true) {
+      case (type === "before"):
+        body.before(App);
+        break;
+
+      case (type === "prepend"):
+        body.prepend(App);
+        break;
+
+      case (type === "replace"):
+        body.replaceWith(App);
+        break;
+
       case (type === "append"):
         body.append(App);
+        break;
+
+      case (type === "after"):
+        body.after(App);
         break;
     
       default:
@@ -27,45 +51,84 @@ const snapp = (() => {
     document.dispatchEvent(new Event("DOM"))
   }
 
+  const remove = (items, option) => {
+    items.forEach(item => {
+      if (item instanceof Element) {
+        item.remove()
+      } else if (typeof item === "object") {
+        const {eventType, eventName} = item;
+        // console.log(globalParamater, globalEvent, eventName, eventType)
+        if (option === true) {
+          delete globalParamater[eventName]
+        }
+        delete globalEvent[eventType][eventName]
+      }
+    })
+  }
+
   const on = (eventName, callBack) => {
     document.addEventListener(eventName, callBack, { once: true })
   }
 
   const select = (name) => {
-    if (typeof name === "string") return document.querySelector(name)
-    return document.querySelectorAll(name);
+    if (typeof name === 'string') {
+      return document.querySelector(name)
+    }
+    if (Array.isArray(name)) {
+      return name.map(sel => document.querySelector(sel));
+    }
+    return null;
   }
 
-  var dataCount = 0;
-  const globalEvent = {};
-  const globalParamater = {};
+  const selectAll = (name) => {
+    if (typeof name === 'string') {
+      return document.querySelectorAll(name)
+    }
+    if (Array.isArray(name)) {
+      return name.map(sel => document.querySelectorAll(sel));
+    }
+    return null;
+  }
 
-  const event = (name, eventType, callBack, replace = false) => {
+  const event = (eventType, callBack, replace = false) => {
+    eventId++
+
+    let eventName = `evnet-${eventId}`;
+    
     if (!(eventType in globalEvent)) {
       globalEvent[eventType] = [];
-
+      
       document.addEventListener(eventType, (element) => {
+        
         const name = element.target.getAttribute("snapp-e-"+eventType);
-        const dataEvent = element.target.getAttribute("snapp-data-event");
-        if (name) {
-          const parameter = globalParamater[dataEvent]?.[eventType];
+        const dataEvent = element.target.getAttribute("snapp-data");
+        
+        if (globalEvent[eventType][name]) {
 
+          const parameter = globalParamater[name]?.[dataEvent];
           globalEvent[eventType][name](element, parameter);
         }
       })
     }
 
-    if (globalEvent[eventType][name] && !replace) {
+    if (globalEvent[eventType][eventName] && !replace) {
+
       console.warn(`REJECT: Can not add event with already existing name "${name}", use 'true' to replace`);
       return "REJECT"
     }
-    globalEvent[eventType][name] = callBack;
 
-    return name
+    globalEvent[eventType][eventName] = callBack;
+
+    return {
+      eventType: eventType,
+      eventName: eventName
+    }
   }
   
   const createElement = (element, props, children) => {
+    dataCount++;
     const ele = document.createElement(element);
+
     if (props) {
         for (let [key, value] of Object.entries(props)) {
 
@@ -73,33 +136,42 @@ const snapp = (() => {
           if (key === "htmlFor") key = "for";
 
           if (key.startsWith("on") && key !== "on") {
+            
+            if (!elementEvent[dataCount]) {
+              elementEvent[dataCount] = [];
+              ele.setAttribute("snapp-data", dataCount)
+            }
+
             key = key.toLowerCase().slice(2);
-            ele.addEventListener(key, () => {
-              value();
+            ele.addEventListener(key, value)
+            elementEvent[dataCount].push({
+              type: key,
+              handler: value
             })
 
             continue;
           }
   
           if (key === "event") {
-            if (typeof value !== "object") {
+            if (!Array.isArray(value)) {
               console.error(`REJECT: event must be object, '${value}', on: '${element}'`);
               continue;
             }
 
-            dataCount++;
-            globalParamater[dataCount] = {};
-            ele.setAttribute("snapp-data-event", dataCount)
-  
-            for (let [eventType, eventDetails] of Object.entries(value)) {
-              ele.setAttribute("snapp-e-"+eventType, eventDetails[0])
+            const event = Array.isArray(value[0]) ? value : [value];
+            ele.setAttribute("snapp-data", dataCount)
+            elementEventMap[dataCount] = []
+
+            event.map(event => {
+              const parameter = event[1];
+              const {eventType, eventName} = event[0];
+              ele.setAttribute("snapp-e-"+eventType, eventName);
               
-              if (typeof eventDetails[1] === 'object' && Object.keys(eventDetails[1]).length > 0) {
-                globalParamater[dataCount][eventType] = eventDetails[1]
-              }
-
-            }
-
+              globalParamater[eventName] = globalParamater[eventName] || {}
+              globalParamater[eventName][dataCount] = parameter;
+              elementEventMap[dataCount].push(eventName)
+            })
+  
             continue;
           }
 
@@ -153,12 +225,25 @@ const snapp = (() => {
     mutations.forEach(element => {
       element.removedNodes.forEach(node => {
         if (node instanceof Element) {
+          const dataEvent = node.getAttribute("snapp-data");
 
-          if (node.getAttribute("snapp-data-event")) {
-            const dataEvent = node.getAttribute("snapp-data-event");
-            delete globalParamater[dataEvent]
+          if (dataEvent) {
+            if (elementEvent[dataEvent]) {
+              elementEvent[dataEvent].forEach(eventName => {
+                const {type, handler} = eventName;
+                node.removeEventListener(type, handler)
+              })
+            }
+            
+            elementEventMap[dataEvent].forEach(name => {
+              if (globalParamater[name]) {
+                delete globalParamater[name][dataEvent]
+              }
+            })
+            
+            delete elementEventMap[dataEvent]
+            delete elementEvent[dataEvent]
           }
-
 
         }
       })
@@ -170,7 +255,7 @@ const snapp = (() => {
   })
 
   return {
-    create, render, on, select, event
+    create, render, on, select, selectAll, event, remove
   }
 
 })()

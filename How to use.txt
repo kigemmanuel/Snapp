@@ -34,53 +34,61 @@ you can add your static template
 using snapp helper function!
 
 snapp.render Example:
-
 snapp.render(parentElement, component, type) // To render a component
 snapp.render(parentElement, component, 'append') // Will append
-
 snapp.render(parentElement, component) // Default will replace what is on parentElement
+Other types are 'prepend', 'after', 'before', 'replace'
 
 snapp.on Example:
-
 snapp.on(event, callBack)
 snapp.on("DOM", callBack) // the callBack will run once the element is ready
 
-snapp.select Example:
 
+snapp.select Example:
 snapp.select() for single element
 snapp.select([]) for multiple element return [array]
 
+
 snapp.event Example:
+const loadNewMsg = snapp.event(eventType, callBack)
+const anotherEvent = snapp.event(eventType, callBack)
 
-const loadNewMsg = snapp.event(eventName, eventType, callBack)
-<div id="loadMsg" event{{
-    click: [loadNewMsg]
-}}></div>
+<div id="loadMsg" event{[
+    [loadNewMsg]
+    [anotherEvent]
+]}></div>
 Also you can pass parameter to your event!!
-
-const loginBtn = snapp.event(eventName, eventType, (e, param) => {
+const loginBtn = snapp.event("click", (e, param) => {
     // e is the element that was click, e.target
     // param is for parameter
 
-    console.log(param) // {id: 36392375923, name: "something"}
+    console.log(param) // {id: 36392375923}
 })
-<div event={{
-    click: [loginBtn, {
-        id: 36392375923,
-        name: "something"
-    }]
-}}></div>
-Intertingly any time an element is remove from dom we also remove that element event instance
-But the snapp.event will still be avalible to all other unless you remove it by using snapp.remove(loginBtn)
-Note: using snapp.event is global to all element and component
-'eventName' should be unique for all event but you can overwrite an evnt using the same name and true object
-To overwrite snapp.event use true
+<div event={[loginBtn, {id: 36392375923}]}>Click Snapp</div>
+
+Any time an element is remove from dom we also remove that element event instance!
+But the snapp.event will still be avalible to all other unless you remove it by using snapp.remove(event)
+
+event={[evnt]} // for single event
+event={[[evntOne], [eventTwo]]} // for multiple event
+
+Using snapp.event is a choice but its good if you have many button to have one event listner
+snapp.event uses evnet delegation method it add one event to the document this is good for heavy app!!
+To remove snapp.event use snapp.remove
 
 const loginBtn = snapp.event(eventName, eventType, (e, param) => {
     // overwrite old  event
 }, true)
+snapp.remove([loginBtn]); // This will remove the event!
+snapp.remove([loginBtn, anotherEvent])
+
+Deep delection
+snapp.remove([loginBtn], true) // This will remove the event also parameter of all element connected to it
+If you plan to add the event later do do not use deep delection
 
 onClick / onclick Example:
+The eventListner will be added to the element!
+
 <button onclick={() => alert("Hello Snapp")}>Call Hello snapp</button>
 <button onClick={() => login()}>Login</button>
 <button onclick={() => {
@@ -89,7 +97,32 @@ onClick / onclick Example:
     // Do something
 }}>Login</button>
 
-Using snapp.event is a choice but its good if you have many button to have one event listner
-snapp.event uses evnt delegation method it add more event to the document this is good for heavy app!!
-You can also use click use onClick/onclick, oninput....snapp in freedom your choice
+Snapp cleanup: Snapp keeps track of each element and eventListner!
+If an element is removed from the DOM, Snapp will remove all eventListner of that element
 
+
+Snapp attribute Example:
+Note snapp follows html attribute for sosmething 'double click' its same as html dblclick using doubleClick won't wotk!!
+<button ondblclick={() => alert("Hiii")}>Login</button> // Will work
+<button onDoubleClick={() => alert("Hiii")}>Login</button> // Won't work
+
+Snapp uses html attribute naming for now, it do not care of camalCase or name
+onClick is also same has onclick
+Snapp will support both html/jsx style of attribute name....but for now it support html attribute name
+
+Note attribute name like
+"className" or "class" will work
+"htmlFor" or "for" will work
+All camalCase will bw read as lowercase
+"onClick" as "onclick" etc.
+
+snapp.remove Example:
+snapp.remove is a way to remove element, event!
+
+const [msgBody, feedBody] = snapp.select(["#msgBody", "mfeedBody"])
+snapp.remove([msgBody]) // Will remove msgBody from the dom
+const syaHello = snapp.event(eventName, eventType, evnt)
+snapp.remove([syaHello]) // Will remove the event
+snapp.remove([msgBody, feedBody, syaHello]) // will reomve msgBody, feedBody from DOM and remove syaHello event
+
+When you remove an event with option true all element parameter refrence to it will be deleted too!!
