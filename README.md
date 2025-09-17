@@ -10,11 +10,11 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Introduction](#-introduction)
-- [🎯 Real-World Examples](#-real-world-examples)
-- [🏗️ Project Structure & CLI](#️-project-structure--cli)
-- [🎓 Tutorial Section](#-tutorial-section)
-- [👨‍💻 Creator & Support](#-creator--support)
+- [🌟 Introduction](#introduction)
+- [🎯 Real-World Examples](#real-world-examples)
+- [🏗️ Project Structure & CLI](#project-structure--cli)
+- [🎓 Tutorial Section](#tutorial-section)
+- [👨‍💻 Creator & Support](#creator--support)
 
 ---
 
