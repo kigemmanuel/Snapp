@@ -10,15 +10,15 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Introduction](#-introduction)
-- [🎯 Real-World Examples](#-real-world-examples)
-- [🏗️ Project Structure & CLI](#%EF%B8%8F-project-structure--cli)
-- [🎓 Tutorial Section](#-tutorial-section)
-- [👨‍💻 Creator & Support](#-creator--support)
+- [Introduction](#introduction)
+- [Real-World Examples](#real-world-examples)
+- [Project Structure & CLI](#project-structure--cli)
+- [Tutorial Section](#tutorial-section)
+- [Creator & Support](#creator--support)
 
 ---
 
-## 🌟 Introduction
+## Introduction
 
 ### What Makes Snapp Different?
 
@@ -46,7 +46,7 @@ Unlike other frameworks, Snapp requires no additional learning curve - if you kn
 
 ---
 
-## 🎯 Real-World Examples
+## Real-World Examples
 
 ### Example 1: Dynamic User Profile
 
@@ -187,7 +187,7 @@ snapp.render(snappBody, App());
 
 ---
 
-## 🏗️ Project Structure & CLI
+## Project Structure & CLI
 
 ### Installation
 
@@ -269,7 +269,7 @@ snapp build
 
 ---
 
-## 🎓 Tutorial Section
+## Tutorial Section
 
 ### Getting Started - Two Ways to Initialize
 
@@ -541,7 +541,7 @@ snapp.applycss(element, myCSS)
 
 ---
 
-## 👨‍💻 Creator & Support
+## Creator & Support
 
 ### Creator
 
@@ -573,7 +573,7 @@ Every contribution helps make Snapp better for everyone.
 
 **⚡ Built with Snapp Framework - Fast, Simple, Powerful**
 
-[🚀 Get Started](#-introduction) • [📖 Tutorial](#-tutorial-section) • [💻 GitHub](https://github.com/kigemmanuel/snapp)
+[🚀 Get Started](#introduction) • [📖 Tutorial](#tutorial-section) • [💻 GitHub](https://github.com/kigemmanuel/snapp)
 
 *"Snapp: Where modern development meets traditional web architecture"*
 
