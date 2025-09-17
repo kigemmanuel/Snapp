@@ -1,0 +1,14 @@
+{
+  "name": "snapp-cli",
+  "version": "1.0.0",
+  "description": "Snapp CLI for building and creating projects",
+  "bin": {
+    "snapp": "./bin/main.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "esbuild": "^0.25.9"
+  }
+}
+
