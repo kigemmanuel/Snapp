@@ -1,4 +1,4 @@
-# ⚡ Snapp Framework
+# Snapp Framework
 
 > **Modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
 
