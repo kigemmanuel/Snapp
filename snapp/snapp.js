@@ -1,9 +1,12 @@
 
 
+// v1.0.0
+
 const snapp = (() => {
 
-  var dataCount = 0;
   var eventId = 0;
+  var dataCount = 0;
+  var DOMReady = false;
 
   const elementEvent = {};
   const globalEvent = {};
@@ -31,40 +34,56 @@ const snapp = (() => {
       return;
     }
 
-    switch (true) {
-      case (type === "before"):
-        body.before(App);
-        break;
-        
-        case (type === "prepend"):
-          body.prepend(App);
-        break;
-        
-        case (type === "replace"):
-        body.replaceWith(App);
-        break;
-        
-      case (type === "append"):
-        body.append(App);
-        break;
+    if (typeof App === 'string' || typeof App === 'number' || App instanceof Element ||  App instanceof DocumentFragment) {
+      DOMReady = false;
 
-      case (type === "after"):
-        body.after(App);
-        break;
-    
-      default:
-        body.replaceChildren(App);
-        break;
-      }
+      switch (true) {
+        case (type === "before"):
+          body.before(App);
+          break;
+          
+          case (type === "prepend"):
+            body.prepend(App);
+          break;
+          
+          case (type === "replace"):
+          body.replaceWith(App);
+          break;
+          
+        case (type === "append"):
+          body.append(App);
+          break;
+  
+        case (type === "after"):
+          body.after(App);
+          break;
+      
+        default:
+          body.replaceChildren(App);
+          break;
+        }
 
-    document.dispatchEvent(new Event("DOM"))
+      DOMReady = true;
+      document.dispatchEvent(new Event("DOM"))
+
+    } else {
+      body.replaceChildren("Failed to render, check console")
+      console.log("Failed to render! ", typeof App, App)
+    }
+
   }
 
-  const remove = (items) => {    
+  const remove = (items) => {  
+
+    items = (Array.isArray(items)) ? items : [items];
+
     items.forEach(item => {
+      
       if (item instanceof Element) {
         item.remove()
-      } else if (typeof item === "object") {
+      }
+      
+      else if (typeof item === "object") {
         const {eventType, eventName} = item;
         delete globalEvent[eventType][eventName]
 
@@ -77,30 +96,69 @@ const snapp = (() => {
 
         delete globalParameter[eventName]
       }
+
     })
   }
 
-  const on = (eventName, callBack) => {
-    document.addEventListener(eventName, callBack, { once: true })
+  const on = (event, callBack) => {
+
+    if (typeof event === "string" && event.toUpperCase() === "DOM") {
+      if (DOMReady === true) {
+        callBack()
+      } else {
+        document.addEventListener(event.toUpperCase(), callBack, { once: true })
+      }
+    }
+
   }
 
   const select = (name) => {
     if (typeof name === 'string') {
-      return document.querySelector(name)
+      const element = document.querySelector(name);
+      if (!element) {
+        console.error(`Element with "${name}" not found`)
+        return null
+      }
+      return element
     }
+
     if (Array.isArray(name)) {
-      return name.map(sel => document.querySelector(sel));
+      return name.map(ele => {
+        const element = document.querySelector(ele)
+        if (!element) {
+          console.error(`Element with "${ele}" not found`);
+          return null
+        }
+        return element
+      })
     }
+    console.error("Invalid selector!")
     return null;
   }
-
+  
   const selectAll = (name) => {
     if (typeof name === 'string') {
-      return document.querySelectorAll(name)
+      const element = document.querySelectorAll(name)
+      
+      if (element.length === 0) {
+        console.error(`Element with "${name}" not found`)
+        return null
+      }
+      return element
     }
+
     if (Array.isArray(name)) {
-      return name.map(sel => document.querySelectorAll(sel));
+      return name.map(ele => {
+        const element = document.querySelectorAll(ele)
+
+        if (element.length === 0) {
+          console.error(`Element with "${ele}" not found`)
+          return null
+        }
+        return element;
+      })
     }
+    console.error("Invalid selector!")
     return null;
   }
 
@@ -123,12 +181,6 @@ const snapp = (() => {
       
       eventListners[eventType] = eventTemp;
       document.addEventListener(eventType, eventListners[eventType])
-    }
-
-    if (globalEvent[eventType][eventName] && !replace) {
-
-      console.warn(`REJECT: Can not add event with already existing name "${eventName}", use 'true' to replace`);
-      return "REJECT"
     }
 
     globalEvent[eventType][eventName] = callBack;
@@ -189,7 +241,34 @@ const snapp = (() => {
           }
 
           if (key === "css") {
-            ele.style.cssText = value;
+            if (typeof value === 'string') {
+              ele.style.cssText += value;
+              continue;
+            }
+            else if (Array.isArray(value)) {
+              ele.style.cssText += value.join("");
+              continue;
+            }
+            else if (typeof value === 'object' && !Array.isArray(value)) {
+              ele.style.cssText += snapp.css(value);
+            }
+            continue;
+          }
+
+          if (key === 'style') {
+            if (typeof value === 'object') {
+              
+              for (const [property, style] of Object.entries(value)) {
+                if (property.includes('-')) {
+                  ele.style.setProperty(property, style);
+                } else {
+                  ele.style[property] = style;
+                }
+              }
+
+            } else {
+              console.warn(`Invalid style for ${element}`)
+            }
             continue;
           }
           
@@ -243,7 +322,47 @@ const snapp = (() => {
   }
 
   const css = (css) => {
-    return Object.entries(css).map(([key, value]) => `${key}: ${value}`).join(";");
+    return Object.entries(css).map(([key, value]) => `${key}: ${value}`).join("; ") + "; ";
+  }
+
+  const applycss = (element, css, replace = false) => {
+    element = (Array.isArray(element)) ? element : [element];
+    css = ((Array.isArray(css)) ? css : [css]).join("");
+
+    element.forEach(element => {
+
+      if (!(element instanceof Element)) {
+        console.error(`Error! can not apply css to "${element}", selelct a valid element`)
+        return;
+      }
+
+      if (replace) {
+        element.style.cssText = css
+      } else {
+        element.style.cssText += css;
+      }
+    })
+    
+  }
+
+  const applystyle = (element, styles) => {
+    element = (Array.isArray(element)) ? element : [element];
+    
+    element.forEach(ele => {
+
+      if (!(element instanceof Element)) {
+        console.error(`Error! can not apply css to "${element}", selelct a valid element`)
+        return;
+      }
+
+      for (const [property, style] of Object.entries(styles)) {
+        if (property.includes('-')) {
+          ele.style.setProperty(property, style);
+        } else {
+          ele.style[property] = style;
+        }
+      }
+    })
   }
 
   const escapeAttr = (val) => {
@@ -289,10 +408,9 @@ const snapp = (() => {
   })
 
   return {
-    create, render, on, select, selectAll, event, css, remove
+    create, render, on, select, selectAll, event, css, applycss, applystyle, remove
   }
 
 })()
-
 
 export default snapp;
