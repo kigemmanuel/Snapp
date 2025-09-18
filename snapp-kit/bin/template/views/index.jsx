@@ -1,11 +1,12 @@
 
 import snapp from '../snapp'
+import SnappHello from './components/Snapp';
 
 const App = () => {
 
   return (
     <>
-      <h2>Hello Snapp</h2>
+      <SnappHello />
     </>
   )
 };

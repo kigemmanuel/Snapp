@@ -5,15 +5,17 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 
+// Snapp framework version (update this manually)
+const SNAPP_VERSION = '1.0.0';
+// Snapp framework version (update this manually)
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Get command line arguments
 const args = process.argv.slice(2);
 const command = args[0];
-
-// Snapp framework version (update this manually)
-const SNAPP_VERSION = '1.0.0';
 
 // Read package.json for version info
 const getVersionInfo = () => {

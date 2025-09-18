@@ -1,6 +1,23 @@
 
-
-// v1.0.0
+/*!
+ * Snapp Framework v1.0.0
+ * A lightweight JSX-like framework for vanilla JavaScript
+ * 
+ * @version 1.0.0
+ * @license MIT
+ * @repository https://github.com/kigemmanuel/Snapp
+ * 
+ * Features:
+ * - JSX-like syntax compilation
+ * - Component-based architecture  
+ * - Zero dependencies
+ * - Lightweight and fast
+ * 
+ * Built with ❤️ for modern web development
+ * 
+ * Copyright (c) 2025 kigemmanuel
+ * Released under the MIT License
+ */
 
 const snapp = (() => {
 

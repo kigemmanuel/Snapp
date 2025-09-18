@@ -1,4 +1,4 @@
-import snapp from "../snapp.v1.0.0";
+import snapp from "../snapp.js";
 
 // views/index.jsx
 var App = () => {
