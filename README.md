@@ -11,7 +11,7 @@
 
 - [Introduction](#introduction)
 - [Real-World Examples](#real-world-examples)
-- [Project Structure & CLI](#project-structure--cli)
+- [Project Structure & CLI/KIT](#project-structure--kit)
 - [Tutorial Section](#tutorial-section)
 - [Creator & Support](#creator--support)
 
@@ -197,7 +197,7 @@ npm install -g snapp-kit
 **Read more abould snapp-kit on**
 [github](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
 **or on**
-[npm](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
+[npm](https://www.npmjs.com/package/snapp-kit)
 
 ### Creating a New Project
 
