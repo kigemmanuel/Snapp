@@ -199,7 +199,7 @@ npm install -g snapp-cli
 
 ```bash
 # Create new Snapp project
-snapp new my-awesome-app
+snapp create my-awesome-app
 cd my-awesome-app
 
 # Start development with hot reload
