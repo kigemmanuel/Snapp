@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="snapp.png" alt="Snapp Framework Logo" width="200">
+</p>
+
 # Snapp Framework
 
 > **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
@@ -11,7 +16,7 @@
 
 - [Introduction](#introduction)
 - [Real-World Examples](#real-world-examples)
-- [Project Structure & CLI/KIT](#project-structure--kit)
+- [Installation & Project Structure](#project-structure--kit)
 - [Tutorial Section](#tutorial-section)
 - [Creator & Support](#creator--support)
 
