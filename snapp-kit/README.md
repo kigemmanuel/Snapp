@@ -2,6 +2,7 @@
 
 > **A global build tool for Snapp Framework. Install once, use everywhere. Zero dependencies, zero configuration - just compile your JSX/TSX files to vanilla JavaScript.**
 
+
 [![npm version](https://badge.fury.io/js/snapp-kit.svg)](https://www.npmjs.com/package/snapp-kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with esbuild](https://img.shields.io/badge/Powered%20by-esbuild-orange)](https://esbuild.github.io/)
@@ -10,6 +11,7 @@
 
 ## 📋 Table of Contents
 
+- [What is snapp](https://github.com/kigemmanuel/Snapp)
 - [What is Snapp Kit?](#what-is-snapp-kit)
 - [Installation](#installation)
 - [Quick Start](#quick-start)

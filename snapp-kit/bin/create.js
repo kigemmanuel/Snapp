@@ -66,7 +66,7 @@ const copyTemplate = (src, dest) => {
       .replace(/{{APP_NAME_CAMEL}}/g, toCamelCase(appName));
     
     writeFileSync(dest, content);
-    console.log(`📄 Created: ${dest}`);
+    // console.log(`📄 Created: ${dest}`);
   }
 };
 

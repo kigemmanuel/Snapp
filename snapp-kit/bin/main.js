@@ -3,6 +3,7 @@
 import { spawn } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,10 +12,52 @@ const __dirname = dirname(__filename);
 const args = process.argv.slice(2);
 const command = args[0];
 
+// Snapp framework version (update this manually)
+const SNAPP_VERSION = '1.0.0';
+
+// Read package.json for version info
+const getVersionInfo = () => {
+  try {
+    const packageJsonPath = join(__dirname, '..', 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+    
+    console.log(`snapp-kit: v${packageJson.version}`);
+    console.log(`snapp: v${SNAPP_VERSION}`);
+    
+    // Print dependencies if they exist
+    if (packageJson.dependencies && Object.keys(packageJson.dependencies).length > 0) {
+      console.log('\nDependencies:');
+      Object.entries(packageJson.dependencies).forEach(([name, version]) => {
+        console.log(`  ${name}: ${version}`);
+      });
+    }
+    
+    // Print devDependencies if they exist
+    if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length > 0) {
+      console.log('\nDev Dependencies:');
+      Object.entries(packageJson.devDependencies).forEach(([name, version]) => {
+        console.log(`  ${name}: ${version}`);
+      });
+    }
+    
+    // Print peerDependencies if they exist
+    if (packageJson.peerDependencies && Object.keys(packageJson.peerDependencies).length > 0) {
+      console.log('\nPeer Dependencies:');
+      Object.entries(packageJson.peerDependencies).forEach(([name, version]) => {
+        console.log(`  ${name}: ${version}`);
+      });
+    }
+    
+  } catch (error) {
+    console.error('❌ Could not read package.json:', error.message);
+    process.exit(1);
+  }
+};
+
 // Help message
 const showHelp = () => {
   console.log(`
-🚀 Snapp CLI
+🚀 Snapp Kit
 
 Usage:
   snapp <command> [options]
@@ -27,6 +70,7 @@ Build Options:
   -M, --minify        Minify output files
   
 General Options:
+  -v, --version       Show version information
   -h, --help          Show this help message
 
 Examples:
@@ -34,10 +78,18 @@ Examples:
   snapp build                     # Build and watch (no minify)
   snapp build -M                  # Build and watch with minify
   snapp build --minify            # Build and watch with minify
+  snapp -v                        # Show version info
+  snapp --version                 # Show version info
   snapp -h                        # Show help
   snapp --help                    # Show help
 `);
 };
+
+// Show version if version flag
+if (command === '-v' || command === '--version') {
+  getVersionInfo();
+  process.exit(0);
+}
 
 // Show help if no command or help flag
 if (!command || command === '-h' || command === '--help') {

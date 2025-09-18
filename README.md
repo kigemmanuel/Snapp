@@ -2,7 +2,6 @@
 
 > **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
 
-[![npm version](https://badge.fury.io/js/snapp-framework.svg)](https://www.npmjs.com/package/snapp-framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with JavaScript](https://img.shields.io/badge/Built%20with-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -187,13 +186,18 @@ snapp.render(snappBody, App());
 
 ---
 
-## Project Structure & CLI
+## Project Structure & KIT
 
 ### Installation
+**Note you install this once globally you do not need to install for all project**
 
 ```bash
-npm install -g snapp-cli
+npm install -g snapp-kit
 ```
+**Read more abould snapp-kit on**
+[github](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
+**or on**
+[npm](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
 
 ### Creating a New Project
 

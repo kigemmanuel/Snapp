@@ -1,14 +1,48 @@
 {
-  "name": "snapp-cli",
+  "name": "snapp-kit",
   "version": "1.0.0",
-  "description": "Snapp CLI for building and creating projects",
+  "description": "A global build tool for Snapp Framework. Install once, use everywhere. Zero dependencies, zero configuration - just compile your JSX/TSX files to vanilla JavaScript.",
+  "main": "bin/main.js",
   "bin": {
     "snapp": "./bin/main.js"
   },
   "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "snapp",
+    "kit",
+    "jsx",
+    "tsx",
+    "build-tool",
+    "esbuild",
+    "cli",
+    "framework",
+    "javascript",
+    "typescript"
+  ],
+  "author": "kigemmanuel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kigemmanuel/Snapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kigemmanuel/Snapp.git/issues"
+  },
+  "homepage": "https://github.com/kigemmanuel/Snapp.git",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "preferGlobal": true,
   "dependencies": {
     "fs-extra": "^11.1.1",
     "esbuild": "^0.25.9"
   }
 }
-
