@@ -367,7 +367,7 @@ const snapp = (() => {
 
     element.forEach(ele => {
 
-      if (!(element instanceof Element)) {
+      if (!(ele instanceof Element)) {
         console.error(`Error! can not apply css to "${element}", selelct a valid element`)
         return;
       }
