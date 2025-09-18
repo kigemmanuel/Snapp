@@ -257,7 +257,7 @@ touch contact.html
 touch views/contact.jsx
 
 # 3. The build system automatically detects and compiles new files
-snapp build # Run this once to enable hot reload during development
+snapp build # Run this once again to enable hot reload during development
 
 # 4. Snapp will build and generate all files in the src folder
 ```
