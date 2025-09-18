@@ -388,11 +388,13 @@ const snapp = (() => {
               })
             }
             
-            elementEventMap[dataEvent].forEach(name => {
-              if (globalParameter[name]) {
-                delete globalParameter[name][dataEvent]
-              }
-            })
+            if (elementEventMap[dataEvent]) {
+              elementEventMap[dataEvent].forEach(name => {
+                if (globalParameter[name]) {
+                  delete globalParameter[name][dataEvent]
+                }
+              })
+            }
             
             delete elementEventMap[dataEvent]
             delete elementEvent[dataEvent]

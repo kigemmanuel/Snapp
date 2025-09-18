@@ -1,6 +1,6 @@
 # Snapp Framework
 
-> **Modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
+> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
 
 [![npm version](https://badge.fury.io/js/snapp-framework.svg)](https://www.npmjs.com/package/snapp-framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -22,7 +22,7 @@
 
 ### What Makes Snapp Different?
 
-Snapp is a modern JavaScript framework that **renders components directly to the browser DOM** without virtual DOM layers. Built for developers who want modern component architecture with traditional multi-page benefits.
+Snapp is a modern JavaScript framework that **renders components directly to the browser DOM** without virtual DOM layers. It's designed for developers who want modern component architecture combined with the benefits of traditional multi-page applications.
 
 - **🚀 Direct DOM Rendering** - No virtual DOM means instant updates and superior performance
 - **📱 SEO-First Design** - Each page has its own HTML template for perfect search engine optimization
@@ -31,7 +31,7 @@ Snapp is a modern JavaScript framework that **renders components directly to the
 - **📦 Multi-Page Architecture** - Traditional routing with modern component development
 - **🔧 Built-in Build System** - esbuild integration for `.js`, `.jsx`, `.ts`, `.tsx`
 
-Snapp requires no additional learning curve - if you know JavaScript and HTML, you know Snapp.
+Snapp requires minimal learning - if you know JavaScript and HTML, you already know Snapp.
 
 ### Why Choose Snapp?
 
@@ -71,7 +71,7 @@ Snapp requires no additional learning curve - if you know JavaScript and HTML, y
 </html>
 ```
 
-**This is what search engine crawlers see for SEO.** If you don't plan on using server-side rendering, this is the best choice. Server-side rendering is still possible with Snapp but we won't cover that here.
+**This is what search engine crawlers see for SEO.** If you don't plan on using server-side rendering, this approach provides the best SEO results. Server-side rendering is still possible with Snapp, but it's not covered in this guide.
 
 **Reusable Component:**
 ```jsx
@@ -103,7 +103,7 @@ const App = () => {
     fetch('/api/user/123')
       .then(response => response.json())
       .then(data => {
-        // Replace loading content with real data
+        // Replace loading content with actual data
         snapp.render(snappBody, <UserDetails data={data} />);
     })
     .catch(error => {
@@ -144,13 +144,13 @@ import snapp from '../snapp.js';
 
 const App = () => {
   const showLoginForm = snapp.event("click", () => {
-  // Get form id from backend
-  fetch('/api/auth/form')
-    .then(response => response.json())
-    .then(data => {
-       const formContainer = snapp.select("#formContainer");
-       snapp.render(formContainer, <LoginForm formId={data.id} />);
-    });
+    // Get form ID from backend
+    fetch('/api/auth/form')
+      .then(response => response.json())
+      .then(data => {
+         const formContainer = snapp.select("#formContainer");
+         snapp.render(formContainer, <LoginForm formId={data.id} />);
+      });
   });
     
   return (
@@ -167,7 +167,7 @@ const App = () => {
 const LoginForm = (props) => {
   const handleLogin = snapp.event("submit", (e) => {
     e.preventDefault();
-    // Handle login
+    // Handle login logic
     console.log("Login with form ID:", props.formId);
   });
 
@@ -233,10 +233,10 @@ my-snapp-app/
 
 ### How Building Works
 
-1. **Write Components** - Create `.jsx`/`.tsx` files in `views/` folder
-2. **Auto-Build** - `snapp build` watches and compiles to `src/` folder
-3. **HTML Templates** - Each page has its own HTML file for SEO
-4. **Link Together** - HTML files import the built JavaScript from `src/`
+1. **Write Components** - Create `.jsx`/`.tsx` files in the `views/` folder
+2. **Auto-Build** - `snapp build` watches and compiles files to the `src/` folder
+3. **HTML Templates** - Each page has its own HTML file for SEO optimization
+4. **Link Together** - HTML files import the built JavaScript from the `src/` folder
 
 ### Adding New Pages
 
@@ -247,10 +247,10 @@ touch contact.html
 # 2. Create JSX component  
 touch views/contact.jsx
 
-# 3. Build system automatically detects and compiles
-snapp build # call this once for hot reload as you code
+# 3. The build system automatically detects and compiles new files
+snapp build # Run this once to enable hot reload during development
 
-# 4. snapp will build and generate all files to src folder
+# 4. Snapp will build and generate all files in the src folder
 ```
 
 **Example `contact.html`:**
@@ -268,7 +268,7 @@ snapp build # call this once for hot reload as you code
 </html>
 ```
 
-**Example `views/contact.js`:**
+**Example `views/contact.jsx`:**
 ```jsx
 // views/contact.jsx
 import snapp from '../snapp'
@@ -277,23 +277,23 @@ import Button from 'components/Button.js'
 const App = () => {
     return (
       <>
-       <h2>Hello Contact</h2>
-       // All your contact paage
-       // All your contact paage
-       // All your contact paage
+       <h2>Contact Us</h2>
+       {/* Your contact page content */}
+       {/* Additional contact page elements */}
+       {/* More contact page features */}
       </>
     )
 }
 
-const snappBody = document.querySelector("#snapp-body");
+const snappBody = document.querySelector("#snapp-app");
 snapp.render(snappBody, App());
 ```
 
-**Snapp build will compile and (auto generate) `src/contact.js`**
+**Snapp build will compile and auto-generate `src/contact.js`**
 
 ---
 
-**NOTE: You just have to run 'snapp build' once and it will compile when you save your code!**
+**NOTE: You only need to run 'snapp build' once - it will automatically recompile when you save your code!**
 
 ---
 
@@ -304,12 +304,12 @@ snapp.render(snappBody, App());
 #### Method 1: Separate Import
 ```html
 <!-- index.html -->
-<div id="Snapp-Body"></div>
+<div id="snapp-body"></div>
 <script type="module">
-    import snapp from './Snapp.js'
+    import snapp from './snapp.js'
     import App from './src/index.js'
 
-    const snappBody = document.querySelector("#Snapp-Body");
+    const snappBody = document.querySelector("#snapp-body");
     snapp.render(snappBody, App());
 </script>
 ```
@@ -324,7 +324,7 @@ export default const App = () => {
 #### Method 2: Direct Import 
 ```html
 <!-- index.html -->
-<div id="Snapp-Body"></div>
+<div id="snapp-body"></div>
 <script type="module" src="src/index.js"></script>
 ```
 
@@ -340,29 +340,29 @@ const snappBody = document.querySelector("#snapp-body");
 snapp.render(snappBody, App());
 ```
 
-You can even use body:
+You can even use the body element:
 ```html
-<body id="Snapp-Body"></body>
+<body id="snapp-body"></body>
 ```
 
-### snapp.render Example
+### snapp.render Examples
 
 ```jsx
-snapp.render(parentElement, component, type) // To render a component
-snapp.render(parentElement, component, 'append') // Will append
-snapp.render(parentElement, component) // Default will replace what is on parentElement
+snapp.render(parentElement, component, type) // Render a component with specified type
+snapp.render(parentElement, component, 'append') // Will append to existing content
+snapp.render(parentElement, component) // Default behavior - replaces existing content
 ```
 
-Other types are `'prepend'`, `'after'`, `'before'`, `'replace'`
+Other available types: `'prepend'`, `'after'`, `'before'`, `'replace'`
 
 ### snapp.on Example
 
-Use `snapp.on("DOM", callback)` when you need to access DOM elements after they're loaded:
+Use `snapp.on("DOM", callback)` when you need to access DOM elements after they're rendered:
 
 ```jsx
 snapp.on("DOM", () => {
-    // This will run once the elements have been loaded to DOM
-    // This is useful when you want to access the elements!
+    // This runs once the elements have been rendered to the DOM
+    // This is useful when you need to access the elements!
 })
 ```
 
@@ -376,98 +376,95 @@ const App = () => {
     
     snapp.on("DOM", () => {
         // Runs once when elements are rendered to DOM
-        snapp.select("#hello") // Will work because it runs after element is in DOM
+        snapp.select("#hello") // This works because it runs after element is in DOM
     })
     
     const someFunction = () => {
-        snapp.select("#hello") // This is fine because the function runs when user clicks
-                              // the button, which can only happen after element is in DOM
+        snapp.select("#hello") // This works because the function runs when user interacts,
+                              // which can only happen after element is in DOM
     }
     
     return <h2 onclick={() => someFunction()} id="hello">Hello Snapp</h2>
 }
 ```
 
-### snapp.select Example
+### snapp.select Examples
 
 ```jsx
-snapp.select() // for single element
-snapp.select([]) // for multiple elements return [array]
-snapp.selectAll() // for multiple elements with same id, class etc.
-snapp.selectAll([]) // returns arrays of array of elements
+snapp.select("#element") // Select single element
+snapp.select(["#el1", "#el2"]) // Select multiple elements, returns array
+snapp.selectAll(".class") // Select all elements with same class/selector
+snapp.selectAll([".class1", ".class2"]) // Returns arrays of arrays of elements
 ```
 
-### snapp.event Example
+### snapp.event Examples
 
 ```jsx
-const loadNewMsg = snapp.event("click", callBack)
-const anotherEvent = snapp.event("click", callBack)
+const loadNewMsg = snapp.event("click", callback)
+const anotherEvent = snapp.event("click", callback)
 
 <div id="loadMsg" event={[loadNewMsg]}>Click me</div>
 
-// Multiple events
-<div event={[[loadNewMsg], [anotherEvent]]}>Multiple events</div>
+// Multiple events on same element
+<div event={[loadNewMsg, anotherEvent]}>Multiple events</div>
 ```
 
-You can also pass parameters to your event:
+You can also pass parameters to your events:
 ```jsx
 const loginBtn = snapp.event("click", (e, param) => {
-    // e is the element that was clicked, e.target
-    // param is for parameter
+    // e is the element that was clicked (e.target)
+    // param contains your custom parameters
     console.log(param) // {id: 36392375923}
 })
 
 <div event={[loginBtn, {id: 36392375923}]}>Click Snapp</div>
 ```
 
-**Event Delegation:** `snapp.event` uses event delegation - it adds one event listener to the document. This is optimal for heavy applications with many interactive elements!
+**Event Delegation:** `snapp.event` uses event delegation - it adds one event listener to the document. This is optimal for applications with many interactive elements!
 
-Any time an element is removed from the DOM, Snapp automatically removes that element's event instance and parameters. The `snapp.event` handler will still be available for all other elements using the same event.
+When an element is removed from the DOM, Snapp automatically removes that element's event instance and parameters. The `snapp.event` handler remains available for all other elements using the same event.
 
-### onClick / onclick Example
+### onClick / onclick Examples
 
 ```jsx
-<button onclick={() => alert("Hello Snapp")}>Call Hello snapp</button>
+<button onclick={() => alert("Hello Snapp")}>Call Hello Snapp</button>
 <button onClick={() => login()}>Login</button>
 <button onclick={() => {
-    // Do something
-    // Do something  
-    // Do something
+    // Perform multiple actions
+    // Handle complex logic  
+    // Execute additional functions
 }}>Login</button>
 
 // Snapp Attribute Naming
 // Snapp follows HTML attribute naming conventions:
 
-<button ondblclick={() => alert("Hi!")}>Double Click</button> // Will work
-<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // Won't work
+<button ondblclick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
+<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // ❌ Won't work
 ```
 
-Snapp uses HTML attribute naming and doesn't care about camelCase - it converts everything to lowercase.
-`onClick` is treated the same as `onclick`.
+Snapp uses HTML attribute naming and converts everything to lowercase. `onClick` is treated the same as `onclick`.
 
-**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work.
-All camelCase will be converted to lowercase: `"onClick"` becomes `"onclick"`, etc.
+**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work. All camelCase is converted to lowercase: `"onClick"` becomes `"onclick"`, etc.
 
-Snapp will support both HTML/JSX style attribute names in future versions, but currently supports HTML attribute naming.
+Snapp will support both HTML/JSX style attribute names in future versions, but currently uses HTML attribute naming conventions.
 
-**Snapp Cleanup:** Snapp keeps track of each element and its event listeners!
-If an element is removed from the DOM, Snapp also removes all event listeners attached to that element!
+**Snapp Cleanup:** Snapp tracks each element and its event listeners! When an element is removed from the DOM, Snapp automatically removes all event listeners attached to that element!
 
-### snapp.remove Example
+### snapp.remove Examples
 
 ```jsx
 const [msgBody, feedBody] = snapp.select(["#msgBody", "#feedBody"])
-snapp.remove([msgBody]) // Will remove msgBody from the dom
+snapp.remove([msgBody]) // Remove msgBody from the DOM
 
 const sayHello = snapp.event("click", () => {})
-snapp.remove([sayHello]) // Will remove the event
+snapp.remove([sayHello]) // Remove the event listener
 
-snapp.remove([msgBody, feedBody, sayHello]) // Remove elements from DOM and remove event
+snapp.remove([msgBody, feedBody, sayHello]) // Remove elements from DOM and event listeners
 ```
 
-Anytime you remove an event, all element parameters attached to it get cleaned up!
+When you remove an event, all element parameters attached to it are automatically cleaned up!
 
-### snapp.css Example
+### snapp.css Examples
 
 ```jsx
 const divStyle = snapp.css({
@@ -477,7 +474,7 @@ const divStyle = snapp.css({
 <div css={divStyle}>This is cool</div>
 ```
 
-You can use `"background": "red"` or `background: "red"`:
+You can use either syntax: `"background": "red"` or `background: "red"`:
 ```jsx
 const divStyle = snapp.css({
     "background-color": "red"
@@ -502,10 +499,9 @@ const style = snapp.css({
 - `snapp.css/css` follows CSS syntax
 - `style` follows JavaScript syntax
 
-`backgroundColor: "red"` (camelCase) won't work with `snapp.css` and `css={}` but will work for `style`.
-`"background-color": "red"` (CSS syntax) will work for both `snapp.css` and `css` but won't work for `style`!
+`backgroundColor: "red"` (camelCase) won't work with `snapp.css` and `css={}` but will work for `style`. `"background-color": "red"` (CSS syntax) works with both `snapp.css` and `css` but not with `style`!
 
-### snapp.applycss Example
+### snapp.applycss Examples
 
 ```jsx
 const redBg = snapp.css({
@@ -516,7 +512,7 @@ snapp.on("DOM", () => {
     const myDiv = snapp.select("#myDiv")
     
     snapp.applycss(myDiv, redBg)
-    snapp.applycss(myDiv, redBg, true) // using 'true' will replace any other inline style and css text in the element
+    snapp.applycss(myDiv, redBg, true) // Using 'true' replaces any existing inline styles
 })
 
 <div id="myDiv">My Div</div>
@@ -540,20 +536,20 @@ snapp.on("DOM", () => {
 })
 ```
 
-### snapp.applystyle Example
+### snapp.applystyle Examples
 
-`snapp.applystyle` is similar to `applycss` but supports JavaScript CSS syntax/camel case:
+`snapp.applystyle` is similar to `applycss` but supports JavaScript CSS syntax (camelCase):
 
 ```jsx
 snapp.on("DOM", () => {
-    const [hello, wow] = snapp.select(["#Hello", "#wow"])
+    const [hello, wow] = snapp.select(["#hello", "#wow"])
     
     snapp.applystyle([hello, wow], {
         fontSize: "50px"
     })
 })
 
-<p id="Hello">Hello World</p>
+<p id="hello">Hello World</p>
 <p id="wow">Hello World</p>
 ```
 
