@@ -31,7 +31,7 @@ Snapp is a modern JavaScript framework that **renders components directly to the
 - **📦 Multi-Page Architecture** - Traditional routing with modern component development
 - **🔧 Built-in Build System** - esbuild integration for `.js`, `.jsx`, `.ts`, `.tsx`
 
-Unlike other frameworks, Snapp requires no additional learning curve - if you know JavaScript and HTML, you know Snapp.
+Snapp requires no additional learning curve - if you know JavaScript and HTML, you know Snapp.
 
 ### Why Choose Snapp?
 
@@ -60,13 +60,13 @@ Unlike other frameworks, Snapp requires no additional learning curve - if you kn
     <meta name="description" content="View profile and latest activity">
 </head>
 <body id="snapp-app">
-    <div>
-        <h1>User Profile</h1>
-        <p>Username: loading...</p>
-        <p>Age: loading...</p>
-        <p>Email: loading...</p>
-    </div>
-    <script type="module" src="src/user.js"></script>
+  <div>
+    <h1>User Profile</h1>
+    <p>Username</p>
+    <p>Age</p>
+    <p>Email</p>
+  </div>
+  <script type="module" src="src/user.js"></script>
 </body>
 </html>
 ```
@@ -77,16 +77,16 @@ Unlike other frameworks, Snapp requires no additional learning curve - if you kn
 ```jsx
 // views/components/UserDetails.jsx
 export default const UserDetails = (props) => {
-    return (
-        <>
-            <div>
-                <h2>Welcome, {props.data?.username || "Loading..."}</h2>
-                <p>Age: {props.data?.age || "Loading..."}</p>
-                <p>Email: {props.data?.email || "Loading..."}</p>
-                <p>Joined: {props.data?.joinDate || "Loading..."}</p>
-            </div>
-        </>
-    )
+  return (
+    <>
+      <div>
+        <h2>Welcome, {props.data?.username || "Loading..."}</h2>
+        <p>Age: {props.data?.age || "Loading..."}</p>
+        <p>Email: {props.data?.email || "Loading..."}</p>
+        <p>Joined: {props.data?.joinDate || "Loading..."}</p>
+      </div>
+    </>
+  )
 }
 ```
 
@@ -98,22 +98,22 @@ import UserDetails from './components/UserDetails.jsx';
 
 const App = () => {
     const snappBody = document.querySelector("#snapp-app");
-    
+
     // Fetch user data and render when ready
     fetch('/api/user/123')
-        .then(response => response.json())
-        .then(data => {
-            // Replace loading content with real data
-            snapp.render(snappBody, <UserDetails data={data} />);
-        })
-        .catch(error => {
-            snapp.render(snappBody, (
-                <div>
-                    <h2>Error Loading Profile</h2>
-                    <p>Please try again later.</p>
-                </div>
-            ));
-        });
+      .then(response => response.json())
+      .then(data => {
+        // Replace loading content with real data
+        snapp.render(snappBody, <UserDetails data={data} />);
+    })
+    .catch(error => {
+      snapp.render(snappBody, (
+        <div>
+          <h2>Error Loading Profile</h2>
+          <p>Please try again later.</p>
+        </div>
+      ));
+    });
 
     // Return initial loading state
     return <UserDetails data={null} />;
@@ -129,11 +129,11 @@ snapp.render(snappBody, App());
 ```html
 <!-- login.html -->
 <body>
-    <div id="snapp-app">
-        <h1>Account Access</h1>
-        <p>Click login to access your account</p>
-    </div>
-    <script type="module" src="src/login.js"></script>
+  <div id="snapp-app">
+    <h1>Account Access</h1>
+    <p>Click login to access your account</p>
+  </div>
+  <script type="module" src="src/login.js"></script>
 </body>
 ```
 
@@ -143,42 +143,42 @@ snapp.render(snappBody, App());
 import snapp from '../snapp.js';
 
 const App = () => {
-    const showLoginForm = snapp.event("click", () => {
-        // Get form from backend
-        fetch('/api/auth/form')
-            .then(response => response.json())
-            .then(data => {
-                const formContainer = snapp.select("#formContainer");
-                snapp.render(formContainer, <LoginForm formId={data.id} />);
-            });
+  const showLoginForm = snapp.event("click", () => {
+  // Get form id from backend
+  fetch('/api/auth/form')
+    .then(response => response.json())
+    .then(data => {
+       const formContainer = snapp.select("#formContainer");
+       snapp.render(formContainer, <LoginForm formId={data.id} />);
     });
+  });
     
-    return (
-        <>
-            <div id="formContainer">
-                <p>Ready to login?</p>
-            </div>
-            
-            <button event={[showLoginForm]}>Login</button>
-        </>
-    );
+  return (
+    <>
+      <div id="formContainer">
+        <p>Ready to login?</p>
+      </div>
+        
+      <button event={[showLoginForm]}>Login</button>
+    </>
+  );
 }
 
 const LoginForm = (props) => {
-    const handleLogin = snapp.event("submit", (e) => {
-        e.preventDefault();
-        // Handle login
-        console.log("Login with form ID:", props.formId);
-    });
+  const handleLogin = snapp.event("submit", (e) => {
+    e.preventDefault();
+    // Handle login
+    console.log("Login with form ID:", props.formId);
+  });
 
-    return (
-        <form event={[handleLogin]}>
-            <h3>Login (Form: {props.formId})</h3>
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Login</button>
-        </form>
-    );
+  return (
+    <form event={[handleLogin]}>
+      <h3>Login (Form: {props.formId})</h3>
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  );
 }
 
 const snappBody = document.querySelector("#snapp-app");
@@ -213,22 +213,22 @@ snapp zip
 
 ```
 my-snapp-app/
-├── views/              # 🎯 Source JSX/TSX components
-│   ├── index.jsx       # Main page component
-│   ├── about.jsx       # About page component  
-│   ├── user.jsx        # User profile component
-│   └── components/     # Reusable components
+├── views/           # 🎯 Source JSX/TSX components
+│   ├── index.jsx    # Main page component
+│   ├── about.jsx    # About page component  
+│   ├── user.jsx     # User profile component
+│   └── components/  # Reusable components
 │       ├── Header.jsx
 │       ├── Footer.jsx
 │       └── UserCard.jsx
-├── src/                # 📦 Built JavaScript files (auto-generated)
-│   ├── index.js        # Built from views/index.jsx
-│   ├── about.js        # Built from views/about.jsx
-│   └── user.js         # Built from views/user.jsx
-├── index.html          # 📄 Homepage template
-├── about.html          # 📄 About page template
-├── user.html           # 📄 User page template
-└── snapp.js           # ⚡ Snapp core library
+├── src/             # 📦 Built JavaScript files (auto-generated)
+│   ├── index.js
+│   ├── about.js
+│   └── user.js
+├── index.html       # 📄 Homepage template
+├── about.html       # 📄 About page template
+├── user.html        # 📄 User page template
+└── snapp.js         # ⚡ Snapp core library
 ```
 
 ### How Building Works
@@ -248,7 +248,9 @@ touch contact.html
 touch views/contact.jsx
 
 # 3. Build system automatically detects and compiles
-snapp build
+snapp build # call this once for hot reload as you code
+
+# 4. snapp will build and generate all files to src folder
 ```
 
 **Example `contact.html`:**
@@ -261,11 +263,37 @@ snapp build
 </head>
 <body id="snapp-app">
     <h1>Contact Us</h1>
-    <p>Loading contact form...</p>
     <script type="module" src="src/contact.js"></script>
 </body>
 </html>
 ```
+
+**Example `views/contact.js`:**
+```jsx
+// views/contact.jsx
+import snapp from '../snapp'
+import Button from 'components/Button.js'
+
+const App = () => {
+    return (
+      <>
+       <h2>Hello Contact</h2>
+       // All your contact paage
+       // All your contact paage
+       // All your contact paage
+      </>
+    )
+}
+
+const snappBody = document.querySelector("#snapp-body");
+snapp.render(snappBody, App());
+```
+
+**Snapp build will compile and (auto generate) `src/contact.js`**
+
+---
+
+**NOTE: You just have to run 'snapp build' once and it will compile when you save your code!**
 
 ---
 
@@ -406,10 +434,10 @@ Any time an element is removed from the DOM, Snapp automatically removes that el
     // Do something  
     // Do something
 }}>Login</button>
-```
 
-**Snapp Attribute Naming:** Snapp follows HTML attribute naming conventions:
-```jsx
+// Snapp Attribute Naming
+// Snapp follows HTML attribute naming conventions:
+
 <button ondblclick={() => alert("Hi!")}>Double Click</button> // Will work
 <button onDoubleClick={() => alert("Hi!")}>Double Click</button> // Won't work
 ```
@@ -464,10 +492,10 @@ const style = snapp.css({
 <h2 css={style}>Hello Snapp</h2>
 
 // Direct object without snapp.css
-<h2 css={{"color": "red"}}>Hi Snapp</h2>
+<h2 css={{color: "red"}}>Hi Snapp</h2>
 
 // Using style attribute
-<div style={{"color": "red"}}>This is a div</div>
+<div style={{color: "red"}}>This is a div</div>
 ```
 
 **Difference between `snapp.css/css` and `style`:**
