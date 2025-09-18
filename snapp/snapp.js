@@ -2,19 +2,19 @@
 /*!
  * Snapp Framework v1.0.0
  * A lightweight JSX-like framework for vanilla JavaScript
- * 
+ *
  * @version 1.0.0
  * @license MIT
  * @repository https://github.com/kigemmanuel/Snapp
- * 
+ *
  * Features:
  * - JSX-like syntax compilation
- * - Component-based architecture  
+ * - Component-based architecture
  * - Zero dependencies
  * - Lightweight and fast
- * 
+ *
  * Built with ❤️ for modern web development
- * 
+ *
  * Copyright (c) 2025 kigemmanuel
  * Released under the MIT License
  */
@@ -45,7 +45,7 @@ const snapp = (() => {
   }
 
   const render = (body, App, type) => {
-    
+
     if (!document.contains(body)) {
       console.error("ERROR: Rending to a non existing/removed element", body)
       return;
@@ -58,23 +58,23 @@ const snapp = (() => {
         case (type === "before"):
           body.before(App);
           break;
-          
+
           case (type === "prepend"):
             body.prepend(App);
           break;
-          
+
           case (type === "replace"):
           body.replaceWith(App);
           break;
-          
+
         case (type === "append"):
           body.append(App);
           break;
-  
+
         case (type === "after"):
           body.after(App);
           break;
-      
+
         default:
           body.replaceChildren(App);
           break;
@@ -90,23 +90,23 @@ const snapp = (() => {
 
   }
 
-  const remove = (items) => {  
+  const remove = (items) => {
 
     items = (Array.isArray(items)) ? items : [items];
 
     items.forEach(item => {
-      
+
       if (item instanceof Element) {
         item.remove()
       }
-      
+
       else if (typeof item === "object") {
         const {eventType, eventName} = item;
         delete globalEvent[eventType][eventName]
 
         if (Object.keys(globalEvent[eventType]).length === 0) {
-          document.removeEventListener(eventType, eventListners[eventType]); 
-          
+          document.removeEventListener(eventType, eventListners[eventType]);
+
           delete globalEvent[eventType]
           delete eventListners[eventType]
         }
@@ -152,11 +152,11 @@ const snapp = (() => {
     console.error("Invalid selector!")
     return null;
   }
-  
+
   const selectAll = (name) => {
     if (typeof name === 'string') {
       const element = document.querySelectorAll(name)
-      
+
       if (element.length === 0) {
         console.error(`Element with "${name}" not found`)
         return null
@@ -183,10 +183,10 @@ const snapp = (() => {
     eventId++
 
     let eventName = `event-${eventId}`;
-    
+
     if (!(eventType in globalEvent)) {
       globalEvent[eventType] = [];
-    
+
       const eventTemp = (element) => {
         const name = element.target.getAttribute("snapp-e-"+eventType);
         const dataEvent = element.target.getAttribute("snapp-data");
@@ -195,7 +195,7 @@ const snapp = (() => {
           globalEvent[eventType][name](element, parameter);
         }
       }
-      
+
       eventListners[eventType] = eventTemp;
       document.addEventListener(eventType, eventListners[eventType])
     }
@@ -207,7 +207,7 @@ const snapp = (() => {
       eventName: eventName
     }
   }
-  
+
   const createElement = (element, props, children) => {
     dataCount++;
     const ele = document.createElement(element);
@@ -219,7 +219,7 @@ const snapp = (() => {
           if (key === "htmlFor") key = "for";
 
           if (key.startsWith("on") && key !== "on") {
-            
+
             if (!elementEvent[dataCount]) {
               elementEvent[dataCount] = [];
               ele.setAttribute("snapp-data", dataCount)
@@ -234,7 +234,7 @@ const snapp = (() => {
 
             continue;
           }
-  
+
           if (key === "event") {
             if (!Array.isArray(value)) {
               console.error(`REJECT: event must be object, '${value}', on: '${element}'`);
@@ -249,7 +249,7 @@ const snapp = (() => {
               const parameter = event[1];
               const {eventType, eventName} = event[0];
               ele.setAttribute("snapp-e-"+eventType, eventName);
-              
+
               globalParameter[eventName] = globalParameter[eventName] || {}
               globalParameter[eventName][dataCount] = parameter;
               elementEventMap[dataCount].push(eventName)
@@ -274,7 +274,7 @@ const snapp = (() => {
 
           if (key === 'style') {
             if (typeof value === 'object') {
-              
+
               for (const [property, style] of Object.entries(value)) {
                 if (property.includes('-')) {
                   ele.style.setProperty(property, style);
@@ -288,24 +288,24 @@ const snapp = (() => {
             }
             continue;
           }
-          
+
           ele[key] = escapeAttr(value);
         }
     }
-    
+
     children.forEach(node => {
       if (typeof node === 'string' || typeof node === 'number' || node instanceof Element ||  node instanceof DocumentFragment) {
         try {
           ele.append(node);
         } catch (error) {
           console.log(error)
-        }  
+        }
       }
     });
-  
+
     return ele;
   }
-  
+
   const createFragment = (children) => {
     const frag = document.createDocumentFragment();
     children.forEach(node => {
@@ -313,20 +313,20 @@ const snapp = (() => {
           frag.append(node);
       }
     });
-  
+
     return frag;
   }
-  
-  const createComponent = (element, props, children) => {
-    const totalProps = {...props, props: children};  
+
+  const createComponent = (element, props = {}, children) => {
+    const totalProps = {...props, props: children};
     const comp = element(totalProps);
-  
+
     return comp;
   }
-  
+
   const flattenChildren = (children) => {
       const final = []
-  
+
       for (const child of children) {
           if (Array.isArray(child)) {
               final.push(...flattenChildren(child))
@@ -334,7 +334,7 @@ const snapp = (() => {
               final.push(child)
           }
       }
-  
+
       return final
   }
 
@@ -359,12 +359,12 @@ const snapp = (() => {
         element.style.cssText += css;
       }
     })
-    
+
   }
 
   const applystyle = (element, styles) => {
     element = (Array.isArray(element)) ? element : [element];
-    
+
     element.forEach(ele => {
 
       if (!(element instanceof Element)) {
@@ -404,7 +404,7 @@ const snapp = (() => {
                 node.removeEventListener(type, handler)
               })
             }
-            
+
             if (elementEventMap[dataEvent]) {
               elementEventMap[dataEvent].forEach(name => {
                 if (globalParameter[name]) {
@@ -412,7 +412,7 @@ const snapp = (() => {
                 }
               })
             }
-            
+
             delete elementEventMap[dataEvent]
             delete elementEvent[dataEvent]
           }
