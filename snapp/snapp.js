@@ -188,8 +188,12 @@ const snapp = (() => {
       globalEvent[eventType] = [];
 
       const eventTemp = (element) => {
-        const name = element.target.getAttribute("snapp-e-"+eventType);
-        const dataEvent = element.target.getAttribute("snapp-data");
+        const target = element.target;
+        const elWithAttr = target.closest(`[snapp-e-${eventType}]`);
+        if (!elWithAttr) return;
+        const name = elWithAttr.getAttribute(`snapp-e-${eventType}`);
+        const dataEvent = elWithAttr.getAttribute("snapp-data");
+
         if (globalEvent[eventType][name]) {
           const parameter = globalParameter[name]?.[dataEvent];
           globalEvent[eventType][name](element, parameter);
