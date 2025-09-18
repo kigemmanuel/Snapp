@@ -40,7 +40,7 @@ const templateDir = join(__dirname, 'template');
 
 if (!existsSync(templateDir)) {
   console.error('❌ Template directory not found!');
-  console.error('💡 Make sure the template folder exists in your CLI directory');
+  console.error('💡 Make sure the template folder exists in your CLI directory, or reinstall snapp-cli');
   process.exit(1);
 }
 
@@ -88,7 +88,6 @@ try {
 
 Next steps:
   cd ${appName}
-  npm install
   snapp build
 
 Happy coding! 🎉
