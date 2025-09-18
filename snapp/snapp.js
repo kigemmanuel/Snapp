@@ -185,7 +185,7 @@ const snapp = (() => {
     let eventName = `event-${eventId}`;
 
     if (!(eventType in globalEvent)) {
-      globalEvent[eventType] = [];
+      globalEvent[eventType] = {}
 
       const eventTemp = (element) => {
         const target = element.target;
