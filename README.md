@@ -5,7 +5,7 @@
 
 # Snapp Framework
 
-> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, SEO-optimized multi-page applications using familiar JSX syntax.**
+> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, multi-page applications using familiar JSX syntax.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with JavaScript](https://img.shields.io/badge/Built%20with-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -26,35 +26,25 @@
 
 ### What Makes Snapp Different?
 
-Snapp is a modern JavaScript framework that **renders components directly to the browser DOM** without virtual DOM layers. It's designed for developers who want modern component architecture combined with the benefits of traditional multi-page applications.
+Snapp bridges modern JSX/TSX development with traditional DOM manipulation. It's for developers who want component-based architecture while keeping direct browser DOM control.
 
-- **🚀 Direct DOM Rendering** - No virtual DOM means instant updates and superior performance
-- **📱 SEO-First Design** - Each page has its own HTML template for perfect search engine optimization
-- **🧹 Smart Memory Management** - Automatic event cleanup and memory leak prevention  
-- **⚛️ JSX/TSX Support** - Write components using familiar JSX syntax
-- **📦 Multi-Page Architecture** - Traditional routing with modern component development
-- **🔧 Built-in Build System** - esbuild integration for `.js`, `.jsx`, `.ts`, `.tsx`
+- **🎯 Direct DOM Control** - JSX/TSX compiles to native DOM operations
+- **📄 Multi-Page Native** - Traditional HTML enhanced with modern tooling
+- **⚡ Zero Abstraction Overhead** - No virtual DOM, just compiled JavaScript
+- **🧹 Memory Efficient** - Snapp automatic cleanup of events and elemenet
 
-Snapp requires minimal learning - if you know JavaScript and HTML, you already know Snapp.
+- **🚀 Predictable Performance** - You decide and control when and how updates happen
+- **🔧 esbuild Integration** - Handles `.js`, `.jsx`, `.ts`, `.tsx` compilation
 
-### Why Choose Snapp?
+**JSX/TSX Compilation** → **Native DOM Code** → **Traditional HTML Architecture**
 
-| Feature | Snapp | Other Frameworks |
-|---------|-------|------------------|
-| **DOM Rendering** | Direct to browser DOM | Virtual DOM diffing |
-| **SEO** | Native HTML templates | SSR complexity |
-| **Performance** | No reconciliation overhead | Virtual DOM overhead |
-| **Architecture** | Multi-page apps | Single Page Apps |
-| **Learning Curve** | Minimal - just JavaScript | Framework-specific concepts |
-| **Bundle Size** | Tiny core library | Large framework + dependencies |
-
----
+Snapp gives you **manual DOM power** with **modern component convenience**. Know JavaScript and HTML? You already know Snapp.
 
 ## Real-World Examples
 
 ### Example 1: Dynamic User Profile
 
-**HTML Template (SEO-optimized):**
+**HTML Template :**
 ```html
 <!-- user.html -->
 <!DOCTYPE html>
@@ -75,7 +65,7 @@ Snapp requires minimal learning - if you know JavaScript and HTML, you already k
 </html>
 ```
 
-**This is what search engine crawlers see for SEO.** If you don't plan on using server-side rendering, this approach provides the best SEO results. Server-side rendering is still possible with Snapp, but it's not covered in this guide.
+If you don't plan on using server-side rendering, this approach provides good SEO results.
 
 **Reusable Component:**
 ```jsx
