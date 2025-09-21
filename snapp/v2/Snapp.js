@@ -26,10 +26,8 @@ const snapp = (() => {
   
   var stateId = 0;
   const stateData = {};
-  const stateReg = /\{\{=(.*?)\}\}/g; // {{=anything here}}
-
-  console.log("state: ", stateData)
-
+  const stateReg = /\{=(.*?)\}/g; // {=anything here}
+  
   const eventListener = {};
   const elementEvent = {};
 
@@ -256,7 +254,7 @@ const snapp = (() => {
             
             if (reg.test(node)) {
               const reg = new RegExp(stateReg.source, stateReg.flags);
-              const textNode = document.createTextNode("")
+              const textNode = document.createTextNode("");
               
               const temp = {
                 type: "node",
@@ -399,24 +397,23 @@ const snapp = (() => {
         return stateData[id]?.value
       })
 
-      if (item.type === "attr") {
-        element.setAttribute(item.attr, newTemp)
-      }
-      else if (item.type === "node") {
-        item.node.nodeValue = newTemp;
-      }
+      if (item.type === "attr") 
+        return element.setAttribute(item.attr, newTemp)
+      
+      if (item.type === "node")
+        return item.node.nodeValue = newTemp;
     })
   }
 
 
-  const state = (firstValue = null) => {
-    stateId++
+  const state = (initialtValue = "") => {
+    stateId++;
 
     const id = stateId;
     stateData[id] = {
-      value: firstValue,
+      value: initialtValue,
       bind: new Map()
-    };
+    };                                                         
 
     const update = (val) => {
       if (stateData[id].value !== val) {
@@ -425,6 +422,7 @@ const snapp = (() => {
           if (DOMReady) {
             if (!document.contains(ele)) {
               stateData[id].bind.delete(ele)
+              continue;
             }
           }
           updateState(ele, arry)
@@ -432,7 +430,19 @@ const snapp = (() => {
       }
     }
     
-    const link = `{{=${id}}}`;
+    const trigger = () => {
+      for (const [ele, arry] of stateData[id].bind) {
+        if (DOMReady) {
+          if (!document.contains(ele)) {
+            stateData[id].bind.delete(ele)
+            continue;
+          }
+        }
+        updateState(ele, arry)
+      }
+    }
+    
+    const link = `{=${id}}`;
 
     return {
       get value () {
@@ -440,15 +450,16 @@ const snapp = (() => {
       },
       link,
       update,
+      trigger
     }
   }
 
-  const weakstate = (firstValue = null) => {
-    stateId++
+  const weakstate = (initialtValue = "") => {
+    stateId++;
 
     const id = stateId;
     stateData[id] = {
-      value: firstValue,
+      value: initialtValue,
     };
 
     const update = (val) => {
@@ -457,7 +468,7 @@ const snapp = (() => {
       }
     }
     
-    const link = `{{=${id}}}`;
+    const link = `{=${id}}`;
 
     return {
       get value () {
@@ -511,6 +522,7 @@ const snapp = (() => {
     maxWaitElement++
 
     if (maxWaitElement === 10) {
+      maxWaitElement = 0;
       clearRemovedElementLogic(ele);
     } else {
       timer = setTimeout(() => {
@@ -524,7 +536,6 @@ const snapp = (() => {
   const clearRemovedElementLogic = (ele) => {
     for (const [id, state] of Object.entries(stateData)) {
       if (state.bind) {
-
         for (const [ele, arry] of stateData[id].bind) {
           if (DOMReady) {
             if (!document.contains(ele)) {
@@ -532,7 +543,6 @@ const snapp = (() => {
             }
           }
         }
-
       }
     }
   }
