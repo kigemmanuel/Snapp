@@ -3,7 +3,7 @@
  * Snapp Framework v2.0.0
  * A lightweight JSX-like framework for vanilla JavaScript
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @license MIT
  * @repository https://github.com/kigemmanuel/Snapp
  *
@@ -12,6 +12,7 @@
  * - Component-based architecture
  * - Zero dependencies
  * - Lightweight and fast
+ * - Dynamic state
  *
  * Built with ❤️ for modern web development
  *
@@ -22,11 +23,15 @@
 const snapp = (() => {
 
   var dataId = 0;
+  var dynamicId = 1;
+
   var DOMReady = false;
+  var track_dynamic = null;
   
-  var stateId = 0;
-  const stateData = {};
-  const stateReg = /\{=(.*?)\}/g; // {=anything here}
+  const dynamicData = {};
+  const dynamicDependencies = new Map();
+  console.log("Dynamic => ", dynamicData)
+  console.log("Dependencies => ", dynamicDependencies)
   
   const eventListener = {};
   const elementEvent = {};
@@ -42,7 +47,6 @@ const snapp = (() => {
     
     if (element === "<>") 
       return createFragment(flatChildren);
-    
   }
 
   const render = (body, App, type) => {
@@ -174,72 +178,66 @@ const snapp = (() => {
           if (key === "className") key = "class";
           if (key === "htmlFor") key = "for";
 
-          if (key === "css") {
-            if (typeof value === 'string') {
-              ele.style.cssText += value;
-              continue;
-            }
-            else if (Array.isArray(value)) {
-              ele.style.cssText += value.join("");
-              continue;
-            }
-            else if (typeof value === 'object' && !Array.isArray(value)) {
-              ele.style.cssText += snapp.css(value);
-            }
-            continue;
-          }
-
           if (key === 'style') {
             if (typeof value === 'object') {
-
               for (const [property, style] of Object.entries(value)) {
+                track_dynamic = new Set()
+                const mainStyle = (typeof style === "function") ? style() : style;
+                const newDynamicId = [...track_dynamic]
+                track_dynamic = null;
+
+                if (newDynamicId.length > 0) {
+                  const subscribeData = {
+                    type: "style",
+                    prop: property,
+                    temp: style,
+                    subscribe: newDynamicId
+                  }
+                
+                  ele.setAttribute("snapp-dynamic", dataId);
+                  subscribeDynamic(newDynamicId, subscribeData, ele)
+                }
+                
                 if (property.includes('-')) {
-                  ele.style.setProperty(property, style);
+                  ele.style.setProperty(property, mainStyle);
                 } else {
-                  ele.style[property] = style;
+                  ele.style[property] = mainStyle;
                 }
               }
-            } else {
-              console.warn(`Invalid style for ${element}`)
             }
+            else return console.warn(`Invalid style for ${element}`)
             continue;
           }
-
+          
           if(key.startsWith("on") && key !== "on" && typeof value === "function") {
-            const cheKey = key.substring(3, 2);
-            if (cheKey === cheKey.toUpperCase()) {
-              const eventType = key.toLowerCase().slice(2);
-              ele.setAttribute("snapp-data", dataId);
-              addEventListener(eventType, value, dataId);
-              ele.setAttribute("snapp-e-"+eventType, "true");
-              continue;
-            }
-          }
-          
-          const textReg = new RegExp(stateReg.source, stateReg.flags);
-          if (textReg.test(value)) {
-            const reg = new RegExp(stateReg.source, stateReg.flags);
-            const temp = {
-              type: "attr",
-              attr: key,
-              temp: value
-            }
-
-            for (const match of value.matchAll(reg)) {
-              const id = match[1];
-              if (stateData[id]["bind"]) {
-                if (!stateData[id]["bind"].has(ele)) {
-                  stateData[id]["bind"].set(ele, new Set([]))
-                }
-                stateData[id]["bind"].get(ele).add(temp)
-              }
-            }
-
+            const eventType = key.toLowerCase().slice(2);
             ele.setAttribute("snapp-data", dataId);
-            updateState(ele, [temp])
+            addEventListener(eventType, value, dataId);
+            ele.setAttribute("snapp-e-"+eventType, "true");
             continue;
           }
-          
+
+          if (typeof value === "function" && !key.startsWith("on")) {
+            track_dynamic = new Set()
+            ele.setAttribute(key, value())
+            const newDynamicId = [...track_dynamic]
+            track_dynamic = null;
+
+            if (newDynamicId.length > 0) {
+              const subscribeData = {
+                type: "attr",
+                attr: key,
+                temp: value,
+                subscribe: newDynamicId
+              }
+              
+              ele.setAttribute("snapp-dynamic", dataId);
+              subscribeDynamic(newDynamicId, subscribeData, ele)
+            }
+
+            continue;
+          }
+                    
           // Default
           ele.setAttribute(key, value);
         }
@@ -247,44 +245,29 @@ const snapp = (() => {
 
     children.forEach(node => {
       if (typeof node === 'string' || typeof node === 'number' || node instanceof Element ||  node instanceof DocumentFragment) {
-        try {
-          
-          if (typeof node === 'string' || typeof node === 'number') {
-            const reg = new RegExp(stateReg.source, stateReg.flags);
-            
-            if (reg.test(node)) {
-              const reg = new RegExp(stateReg.source, stateReg.flags);
-              const textNode = document.createTextNode("");
-              
-              const temp = {
-                type: "node",
-                node: textNode,
-                temp: node
-              }
-              
-              for (const match of node.matchAll(reg)) {
-                const id = match[1];
-                if (stateData[id]["bind"]) {
-                  if (!stateData[id]["bind"].has(ele)) {
-                    stateData[id]["bind"].set(ele, new Set([]))
-                  }
-                  stateData[id]["bind"].get(ele).add(temp)
-                }
-              }
+        ele.append(node);
+        return;
+      }
 
-              ele.setAttribute("snapp-data", dataId);
-              updateState(ele, [temp])
-              ele.append(textNode)
-              return;
-            }
+      if (typeof node === 'function') {
+        track_dynamic = new Set()
+        const textNode = document.createTextNode(node())
+        const newDynamicId = [...track_dynamic]
+        track_dynamic = null;
 
+        if (newDynamicId.length > 0) {
+          const subscribeData = {
+            type: "node",
+            node: textNode,
+            temp: node,
+            subscribe: newDynamicId
           }
 
-          // Default
-          ele.append(node);
-        } catch (error) {
-          console.log(error)
+          ele.setAttribute("snapp-dynamic", dataId);
+          subscribeDynamic(newDynamicId, subscribeData, ele)
         }
+
+        ele.append(textNode)
       }
     });
 
@@ -323,29 +306,6 @@ const snapp = (() => {
       return final
   }
 
-  const css = (css) => {
-    return Object.entries(css).map(([key, value]) => `${key}: ${value}`).join("; ") + "; ";
-  }
-
-  const applycss = (element, css, replace = false) => {
-    element = (Array.isArray(element)) ? element : [element];
-    css = ((Array.isArray(css)) ? css : [css]).join("");
-
-    element.forEach(element => {
-
-      if (!(element instanceof Element)) {
-        console.error(`Error! can not apply css to "${element}", selelct a valid element`)
-        return;
-      }
-
-      if (replace) {
-        element.style.cssText = css
-      } else {
-        element.style.cssText += css;
-      }
-    })
-
-  }
 
   const applystyle = (element, styles) => {
     element = (Array.isArray(element)) ? element : [element];
@@ -353,15 +313,39 @@ const snapp = (() => {
     element.forEach(ele => {
 
       if (!(ele instanceof Element)) {
-        console.error(`Error! can not apply css to "${element}", selelct a valid element`)
+        console.error(`Error! can not apply style to "${element}", selelct a valid element`)
         return;
       }
 
-      for (const [property, style] of Object.entries(styles)) {
-        if (property.includes('-')) {
-          ele.style.setProperty(property, style);
-        } else {
-          ele.style[property] = style;
+      if (typeof styles === "object") {
+        for (const [property, style] of Object.entries(styles)) {
+          if (property.includes('-')) {
+            ele.style.setProperty(property, style);
+          } else {
+            ele.style[property] = style;
+          }
+        }
+      }
+    })
+  }
+
+    const removestyle = (element, styles) => {
+    element = (Array.isArray(element)) ? element : [element];
+
+    element.forEach(ele => {
+      if (!(ele instanceof Element)) {
+        console.error(`Error! can not remove style from "${element}", selelct a valid element`)
+        return;
+      }
+
+      if (styles === true) return ele.removeAttribute("style")
+      if (typeof styles === "object") {
+        for (const [property, style] of Object.entries(styles)) {
+          if (property.includes('-')) {
+            ele.style.removeProperty(property);
+          } else {
+            ele.style[property] = "";
+          }
         }
       }
     })
@@ -389,94 +373,86 @@ const snapp = (() => {
     elementEvent[eventType][elementId] = event;
   }
 
-  const updateState = (element, items) => {
-    items.forEach(item => {
-      const reg = new RegExp(stateReg.source, stateReg.flags);
-      
-      const newTemp = item.temp.replace(reg, (match, id) => {
-        return stateData[id]?.value
-      })
 
-      if (item.type === "attr") 
-        return element.setAttribute(item.attr, newTemp)
+  const dynamic = (initialtValue = "") => {
+    const id = `dynamic-${dynamicId++}`;
+    dynamicData[id] = {
+      value: initialtValue,
+      subscribe: new Map()
+    };                               
+
+    const update = (newValue) => {
+      if (dynamicData[id].value !== newValue) {
+        dynamicData[id].value = newValue;
+        for (const [element, items] of dynamicData[id].subscribe) {
+          updateDynamicValue(element, items)
+        }
+      }
+    }
+
+    return {
+      get value () {
+        if (track_dynamic) {
+          track_dynamic.add(id)
+        }
+        return dynamicData[id].value
+      },
+      update,
+    }
+  }
+
+  const updateDynamicValue = (element, items) => {
+    items.forEach(item => {
+      const dynamic = dynamicDependencies.get(element)?.[item];
+      if (dynamic) {
+        const previousDynamicId = new Set(dynamic.subscribe);
+        track_dynamic = new Set();
+        const newTemp = dynamic.temp();
+        const newTrack_dynamic = [...track_dynamic]
+        track_dynamic = null;
+  
+        if (dynamic.type === "node") {
+          dynamic.node.nodeValue = newTemp;
+        } else if (dynamic.type === "attr") {
+          element.setAttribute(dynamic.attr, newTemp)
+        } else if (dynamic.type === "style") {
+          if (newTemp.includes('-')) {
+            element.style.setProperty(dynamic.prop, newTemp);
+          } else {
+            element.style[dynamic.prop] = newTemp;
+          }
+        }
+        
+        newTrack_dynamic.forEach(dynamicId => {
+          if (previousDynamicId.has(dynamicId)) return
+  
+          if (!dynamicData[dynamicId]["subscribe"].has(element)) {
+            dynamicData[dynamicId]["subscribe"].set(element, [])
+          }
+          dynamicData[dynamicId]["subscribe"].get(element).push(item)
+          dynamicDependencies.get(element)[item].subscribe.push(dynamicId)
+        })
+      }
       
-      if (item.type === "node")
-        return item.node.nodeValue = newTemp;
     })
   }
 
+  const subscribeDynamic = (dynamicId, subscribeData, element) => {
+    if (!dynamicDependencies.has(element)) {
+      dynamicDependencies.set(element, [])
+    }
+    dynamicDependencies.get(element).push(subscribeData)
+    const subscribeIndex = dynamicDependencies.get(element).length - 1;
 
-  const state = (initialtValue = "") => {
-    stateId++;
+    dynamicId.forEach(id => {
+      if (!dynamicData[id]) return
 
-    const id = stateId;
-    stateData[id] = {
-      value: initialtValue,
-      bind: new Map()
-    };                                                         
-
-    const update = (val) => {
-      if (stateData[id].value !== val) {
-        stateData[id].value = val
-        for (const [ele, arry] of stateData[id].bind) {
-          if (DOMReady) {
-            if (!document.contains(ele)) {
-              stateData[id].bind.delete(ele)
-              continue;
-            }
-          }
-          updateState(ele, arry)
-        }
+      if (!dynamicData[id]["subscribe"].has(element)) {
+        dynamicData[id]["subscribe"].set(element, [])
       }
-    }
-    
-    const trigger = () => {
-      for (const [ele, arry] of stateData[id].bind) {
-        if (DOMReady) {
-          if (!document.contains(ele)) {
-            stateData[id].bind.delete(ele)
-            continue;
-          }
-        }
-        updateState(ele, arry)
-      }
-    }
-    
-    const link = `{=${id}}`;
 
-    return {
-      get value () {
-        return stateData[id].value
-      },
-      link,
-      update,
-      trigger
-    }
-  }
-
-  const weakstate = (initialtValue = "") => {
-    stateId++;
-
-    const id = stateId;
-    stateData[id] = {
-      value: initialtValue,
-    };
-
-    const update = (val) => {
-      if (stateData[id].value !== val) {
-        stateData[id].value = val
-      }
-    }
-    
-    const link = `{=${id}}`;
-
-    return {
-      get value () {
-        return stateData[id].value
-      },
-      link,
-      update,
-    }
+      dynamicData[id]["subscribe"].get(element).push(subscribeIndex)
+    })
   }
 
   const observer = new MutationObserver((mutations) => {
@@ -484,9 +460,7 @@ const snapp = (() => {
       element.removedNodes.forEach(node => {
         if (node instanceof Element) {
           const elementDataId = node.getAttribute("snapp-data");
-          
           if (elementDataId) {
-
             for (const attrName of node.getAttributeNames()) {
               if (attrName.startsWith('snapp-e-')) {
                 const eventType = attrName.replace("snapp-e-", "");
@@ -502,10 +476,13 @@ const snapp = (() => {
                 }
               }
             }
-
-            clearRemovedElement(node)
-          
           };
+
+          if (node.getAttribute("snapp-dynamic")) {
+            dynamicDependencies.delete(node);
+            callCleardynamicElement()
+          }
+
         }
       })
     });
@@ -515,40 +492,35 @@ const snapp = (() => {
     subtree: true
   })
 
-  let timer;
-  let maxWaitElement = 0;
-  const clearRemovedElement = (ele) => {
-    clearTimeout(timer);
-    maxWaitElement++
+  let timeOut = null;
+  let callCount = 0;
+  const callCleardynamicElement = (delay = 15000, threshold = 30) => {
+    callCount++
+    clearTimeout(timeOut);
 
-    if (maxWaitElement === 10) {
-      maxWaitElement = 0;
-      clearRemovedElementLogic(ele);
+    if (callCount >= threshold) {
+      cleardynamicElement()
+      callCount = 0;
     } else {
-      timer = setTimeout(() => {
-        maxWaitElement = 0;
-        clearRemovedElementLogic(ele);
-      }, 1000)
+      timeOut = setTimeout(() => {
+        cleardynamicElement()
+        callCount = 0;
+      }, delay)
     }
-
   }
 
-  const clearRemovedElementLogic = (ele) => {
-    for (const [id, state] of Object.entries(stateData)) {
-      if (state.bind) {
-        for (const [ele, arry] of stateData[id].bind) {
-          if (DOMReady) {
-            if (!document.contains(ele)) {
-              stateData[id].bind.delete(ele)
-            }
-          }
+  const cleardynamicElement = () => {
+    for (const [dynamicId, items] of Object.entries(dynamicData)) {
+      for (const [element, data] of items.subscribe) {
+        if (!element.isConnected) {
+          dynamicData[dynamicId].subscribe.delete(element)
         }
       }
     }
   }
 
   return {
-    create, render, on, select, selectAll, css, applycss, applystyle, remove, state, weakstate
+    create, render, on, select, selectAll, applystyle, removestyle, remove, dynamic
   }
 
 })()
