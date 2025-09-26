@@ -1,11 +1,14 @@
 
 <p align="center">
-  <img src="snapp.png" alt="Snapp Framework Logo" width="200">
+  <img src="Snapp.png" alt="Snapp Framework Logo" width="200">
 </p>
 
 # Snapp Framework
 
-> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, multi-page applications using familiar JSX syntax.**
+> A modern JavaScript framework that renders components **directly to the browser DOM** with **zero virtual DOM overhead**.
+<br />
+Build **fast, multi-page applications** using the familiar **JSX syntax** you already know.
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with JavaScript](https://img.shields.io/badge/Built%20with-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -22,6 +25,10 @@
 
 ---
 
+## Snapp v2
+Snapp v2 is **optimized** and **faster** than v1.  
+It offers improved performance and efficiency compared to the previous version.
+
 ## Introduction
 
 ### What Makes Snapp Different?
@@ -31,20 +38,45 @@ Snapp bridges modern JSX/TSX development with traditional DOM manipulation. It's
 - **🎯 Direct DOM Control** - JSX/TSX compiles to native DOM operations
 - **📄 Multi-Page Native** - Traditional HTML enhanced with modern tooling
 - **⚡ Zero Abstraction Overhead** - No virtual DOM, just compiled JavaScript
-- **🧹 Memory Efficient** - Snapp automatic cleanup of events and elemenet
-
-- **🚀 Predictable Performance** - You decide and control when and how updates happen
+- **🧹 Memory Efficient** - Snapp automatic cleanup of events and elements
+- **🚀 Predictable Performance** - You decide when and how updates happen
 - **🔧 esbuild Integration** - Handles `.js`, `.jsx`, `.ts`, `.tsx` compilation
+- **✨ Dynamic State** - Update individual elements without re-rendering (NEW in v2!)
 
 **JSX/TSX Compilation** → **Native DOM Code** → **Traditional HTML Architecture**
 
 Snapp gives you **manual DOM power** with **modern component convenience**. Know JavaScript and HTML? You already know Snapp.
 
+### Simple Counter Example
+
+```jsx
+// Create dynamic state
+const counter = snapp.dynamic(0);
+
+return (
+<>
+  <h2>Count: {() => counter.value}</h2>
+  <button
+    onclick={() => counter.update(counter.value + 1)>
+  Click To Increase
+  </button>
+  <button
+    onclick={() => counter.update(counter.value - 1)}>
+  Click To Decrease
+  </button>
+</>
+);
+```
+
+The `{() => counter.value}` syntax makes the text update instantly without re-rendering the entire component!
+
+---
+
 ## Real-World Examples
 
-### Example 1: Dynamic User Profile
+### Example: Dynamic User Profile
 
-**HTML Template :**
+**HTML Template:**
 ```html
 <!-- user.html -->
 <!DOCTYPE html>
@@ -56,16 +88,12 @@ Snapp gives you **manual DOM power** with **modern component convenience**. Know
 <body id="snapp-app">
   <div>
     <h1>User Profile</h1>
-    <p>Username</p>
-    <p>Age</p>
-    <p>Email</p>
+    <p>Loading user data...</p>
   </div>
   <script type="module" src="src/user.js"></script>
 </body>
 </html>
 ```
-
-If you don't plan on using server-side rendering, this approach provides good SEO results.
 
 **Reusable Component:**
 ```jsx
@@ -74,7 +102,7 @@ export default const UserDetails = (props) => {
   return (
     <>
       <div>
-        <h2>Welcome, {props.data?.username || "Loading..."}</h2>
+        <h2>Welcome, {props.data?.username || "Guest"}</h2>
         <p>Age: {props.data?.age || "Loading..."}</p>
         <p>Email: {props.data?.email || "Loading..."}</p>
         <p>Joined: {props.data?.joinDate || "Loading..."}</p>
@@ -90,8 +118,9 @@ export default const UserDetails = (props) => {
 import snapp from '../snapp.js';
 import UserDetails from './components/UserDetails.jsx';
 
+const snappBody = document.querySelector("#snapp-app");
+
 const App = () => {
-    const snappBody = document.querySelector("#snapp-app");
 
     // Fetch user data and render when ready
     fetch('/api/user/123')
@@ -113,11 +142,10 @@ const App = () => {
     return <UserDetails data={null} />;
 }
 
-const snappBody = document.querySelector("#snapp-app");
 snapp.render(snappBody, App());
 ```
 
-### Example 2: Dynamic Login Form
+### Example 3: Dynamic Login Form
 
 **HTML Template:**
 ```html
@@ -137,7 +165,7 @@ snapp.render(snappBody, App());
 import snapp from '../snapp.js';
 
 const App = () => {
-  const showLoginForm = snapp.event("click", () => {
+  const showLoginForm = () => {
     // Get form ID from backend
     fetch('/api/auth/form')
       .then(response => response.json())
@@ -153,20 +181,20 @@ const App = () => {
         <p>Ready to login?</p>
       </div>
         
-      <button event={[showLoginForm]}>Login</button>
+      <button onclick={() => showLoginForm()}>Login</button>
     </>
   );
 }
 
 const LoginForm = (props) => {
-  const handleLogin = snapp.event("submit", (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     // Handle login logic
     console.log("Login with form ID:", props.formId);
   });
 
   return (
-    <form event={[handleLogin]}>
+    <form event={(e) => LoginForm(e)}>
       <h3>Login (Form: {props.formId})</h3>
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
@@ -181,18 +209,18 @@ snapp.render(snappBody, App());
 
 ---
 
-## Project Structure & KIT
+## Project Structure & Kit
 
 ### Installation
-**Note you install this once globally you do not need to install for all project**
+**Note: You install this once globally - you do not need to install for every project**
 
 ```bash
 npm install -g snapp-kit
 ```
-**Read more abould snapp-kit on**
-[github](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
-**or on**
-[npm](https://www.npmjs.com/package/snapp-kit)
+
+**Read more about snapp-kit on:**
+- [GitHub](https://github.com/kigemmanuel/Snapp/tree/main/snapp-kit)
+- [npm](https://www.npmjs.com/package/snapp-kit)
 
 ### Creating a New Project
 
@@ -203,9 +231,6 @@ cd my-awesome-app
 
 # Start development with hot reload
 snapp build
-
-# Build for production deployment  
-snapp zip
 ```
 
 ### Project Structure
@@ -246,8 +271,8 @@ touch contact.html
 # 2. Create JSX component  
 touch views/contact.jsx
 
-# 3. The build system automatically detects and compiles new files
-snapp build # Run this once again to enable hot reload during development
+# 3.# Run build once again to enable hot reload during development
+snapp build 
 
 # 4. Snapp will build and generate all files in the src folder
 ```
@@ -270,8 +295,8 @@ snapp build # Run this once again to enable hot reload during development
 **Example `views/contact.jsx`:**
 ```jsx
 // views/contact.jsx
-import snapp from '../snapp'
-import Button from 'components/Button.js'
+import snapp from '../snapp.js'
+import Button from 'components/Button.jsx'
 
 const App = () => {
     return (
@@ -292,11 +317,12 @@ snapp.render(snappBody, App());
 
 ---
 
-**NOTE: You only need to run 'snapp build' once - it will automatically recompile when you save your code!**
+**NOTE: You only need to run 'snapp build' once - it will automatically recompile when you save/edit your code!**
 
 ---
 
 ## Tutorial Section
+**Note: This Tutorial contain only what is avaliable in snapp V2**
 
 ### Getting Started - Two Ways to Initialize
 
@@ -329,7 +355,7 @@ export default const App = () => {
 
 ```jsx
 // views/index.jsx
-import snapp from '../snapp'
+import snapp from '../snapp.js'
 
 const App = () => {
     return <h2>Hello Snapp</h2>
@@ -343,6 +369,98 @@ You can even use the body element:
 ```html
 <body id="snapp-body"></body>
 ```
+
+### snapp.dynamic Examples
+
+#### Creating and Using Dynamic State
+
+```jsx
+// Create dynamic state
+const message = snapp.dynamic("Hello World");
+const count = snapp.dynamic(0);
+const isVisible = snapp.dynamic(true);
+
+// Use in JSX (note the arrow function syntax)
+<div>
+  <h1>{() => message.value}</h1>
+  <p>Count: {() => count.value}</p>
+  <button style={{ display: () => isVisible.value ? 'block' : 'none' }}>
+    Click me
+  </button>
+</div>
+
+// Update values
+message.update("New message!");
+count.update(count.value + 1);
+isVisible.update(false);
+```
+
+#### Dynamic State Syntax Rules
+
+```jsx
+// ✅ Regular variables (static)
+const staticText = "Hello";
+<div>{staticText}</div>
+
+// ✅ Dynamic state variables
+const dynamicText = snapp.dynamic("Hello");
+<div>{() => dynamicText.value}</div>
+
+// ✅ Mixed usage
+<div>
+  Static: {staticText}; // won't update
+  Static: {dynamicText.value}; // won't update
+  Dynamic: {() => dynamicText.value}; // will update
+  Dynamic: {() => dynamicText.value + staticText}; // will update
+</div>
+
+// Use {() => } for dynaminc
+```
+
+#### How Dynamic State Works
+
+**Snapp Dynamic State** lets you change element text content, attributes, and styles dynamically without re-rendering your component/element!
+
+```jsx
+// Create dynamic state
+const message = snapp.dynamic("Hello World");
+
+// Use in JSX with arrow function syntax
+<div>Message: {() => message.value}</div>
+
+// Update the state
+message.update("New Message");
+// Only the text node updates!
+// Only "Hello World" will update to "New Message"
+```
+
+#### Key Dynamic State Features
+
+- **Fast Updates**: When you update a state, Snapp only updates the specific textNode/attribute/style property that changed, not the entire element.
+- **Smart Syntax**: Regular variables use `{variable}`, dynamic state uses `{() => dynamicState.value}`
+- **Automatic Cleanup**: When you delete an element, Snapp automatically cleans up all reference data to the state!
+
+#### Dynamic State Usage Examples
+
+**Text Content:**
+```jsx
+const username = snapp.dynamic("John Doe");
+<h1>Welcome, {() => username.value}!</h1>
+```
+
+**Attributes:**
+```jsx
+const itemId = snapp.dynamic("item-1");
+<div id={() => itemId.value}>Dynamic ID</div>
+```
+
+**Styles:**
+```jsx
+const color = snapp.dynamic("blue");
+<p style={{ color: () => color.value }}>Colorful text</p>
+```
+
+**Note:** For regular variables you can still use `{variable}` but for dynamic state variables use `{() => variable.value}`
 
 ### snapp.render Examples
 
@@ -396,34 +514,9 @@ snapp.selectAll(".class") // Select all elements with same class/selector
 snapp.selectAll([".class1", ".class2"]) // Returns arrays of arrays of elements
 ```
 
-### snapp.event Examples
+**Event Delegation:** Snapp uses event delegation - it adds one event listener to the document. This is optimal for applications with many interactive elements!
 
-```jsx
-const loadNewMsg = snapp.event("click", callback)
-const anotherEvent = snapp.event("click", callback)
-
-<div id="loadMsg" event={[loadNewMsg]}>Click me</div>
-
-// Multiple events on same element
-<div event={[loadNewMsg, anotherEvent]}>Multiple events</div>
-```
-
-You can also pass parameters to your events:
-```jsx
-const loginBtn = snapp.event("click", (e, param) => {
-    // e is the element that was clicked (e.target)
-    // param contains your custom parameters
-    console.log(param) // {id: 36392375923}
-})
-
-<div event={[loginBtn, {id: 36392375923}]}>Click Snapp</div>
-```
-
-**Event Delegation:** `snapp.event` uses event delegation - it adds one event listener to the document. This is optimal for applications with many interactive elements!
-
-When an element is removed from the DOM, Snapp automatically removes that element's event instance and parameters. The `snapp.event` handler remains available for all other elements using the same event.
-
-### onClick / onclick Examples
+### onClick / onclick Event Examples
 
 ```jsx
 <button onclick={() => alert("Hello Snapp")}>Call Hello Snapp</button>
@@ -438,106 +531,17 @@ When an element is removed from the DOM, Snapp automatically removes that elemen
 // Snapp follows HTML attribute naming conventions:
 
 <button ondblclick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
-<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // ❌ Won't work
+<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
+<button ondoubleclick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
 ```
 
 Snapp uses HTML attribute naming and converts everything to lowercase. `onClick` is treated the same as `onclick`.
 
-**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work. All camelCase is converted to lowercase: `"onClick"` becomes `"onclick"`, etc.
+**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work.
 
-Snapp will support both HTML/JSX style attribute names in future versions, but currently uses HTML attribute naming conventions.
-
-**Snapp Cleanup:** Snapp tracks each element and its event listeners! When an element is removed from the DOM, Snapp automatically removes all event listeners attached to that element!
-
-### snapp.remove Examples
-
-```jsx
-const [msgBody, feedBody] = snapp.select(["#msgBody", "#feedBody"])
-snapp.remove([msgBody]) // Remove msgBody from the DOM
-
-const sayHello = snapp.event("click", () => {})
-snapp.remove([sayHello]) // Remove the event listener
-
-snapp.remove([msgBody, feedBody, sayHello]) // Remove elements from DOM and event listeners
-```
-
-When you remove an event, all element parameters attached to it are automatically cleaned up!
-
-### snapp.css Examples
-
-```jsx
-const divStyle = snapp.css({
-    color: "red",
-    background: "red"
-})
-<div css={divStyle}>This is cool</div>
-```
-
-You can use either syntax: `"background": "red"` or `background: "red"`:
-```jsx
-const divStyle = snapp.css({
-    "background-color": "red"
-})
-
-// Dynamic styling
-const darkMode = false;
-const style = snapp.css({
-    color: darkMode ? "white" : "black",
-    "background-color": darkMode ? "black" : "white"
-})
-<h2 css={style}>Hello Snapp</h2>
-
-// Direct object without snapp.css
-<h2 css={{color: "red"}}>Hi Snapp</h2>
-
-// Using style attribute
-<div style={{color: "red"}}>This is a div</div>
-```
-
-**Difference between `snapp.css/css` and `style`:**
-- `snapp.css/css` follows CSS syntax
-- `style` follows JavaScript syntax
-
-`backgroundColor: "red"` (camelCase) won't work with `snapp.css` and `css={}` but will work for `style`. `"background-color": "red"` (CSS syntax) works with both `snapp.css` and `css` but not with `style`!
-
-### snapp.applycss Examples
-
-```jsx
-const redBg = snapp.css({
-    "background-color": "red"
-})
-
-snapp.on("DOM", () => {
-    const myDiv = snapp.select("#myDiv")
-    
-    snapp.applycss(myDiv, redBg)
-    snapp.applycss(myDiv, redBg, true) // Using 'true' replaces any existing inline styles
-})
-
-<div id="myDiv">My Div</div>
-```
-
-Multiple elements:
-```jsx
-const redBg = snapp.css({
-    "background-color": "red"
-})
-
-const anotherCss = snapp.css({
-    "color": "white"
-})
-
-snapp.on("DOM", () => {
-    const [myDiv, myHeader] = snapp.select(["#myDiv", ".myHeader"])
-    
-    snapp.applycss([myDiv, myHeader], [redBg, anotherCss])
-    // applycss accepts arrays of elements and arrays of CSS
-})
-```
+`"onDoubleClick"` or `"ondblclick"` will both work, but every other event name must match HTML event name. [See Event Attributes](https://www.w3schools.com/tags/ref_eventattributes.asp)
 
 ### snapp.applystyle Examples
-
-`snapp.applystyle` is similar to `applycss` but supports JavaScript CSS syntax (camelCase):
 
 ```jsx
 snapp.on("DOM", () => {
@@ -552,15 +556,62 @@ snapp.on("DOM", () => {
 <p id="wow">Hello World</p>
 ```
 
-**Cleanup:** Use `snapp.applycss(element, "", true)` to remove all previous inline CSS/styles.
+### snapp.removestyle Examples
 
-You should use `snapp.applycss` with `snapp.css`:
 ```jsx
-const myCSS = snapp.css({
-    "color": "blue"
+snapp.on("DOM", () => {
+    const [hello, wow] = snapp.select(["#hello", "#wow"])
+    
+    // Remove specific styles by setting them to empty string
+    snapp.removestyle([hello, wow], {
+        fontSize: ""
+    })
 })
-snapp.applycss(element, myCSS)
+
+<p id="hello">Hello World</p>
+<p id="wow">Hello World</p>
 ```
+
+### Style Object Examples
+
+```jsx
+// Style objects accept both camelCase and CSS property names
+const myStyle = {
+  fontSize: "50px",
+  "background-color": "red" // accept both camelCase and js base css
+}
+
+snapp.on("DOM", () => {
+    const [hello, wow] = snapp.select(["#hello", "#wow"])
+    
+    // Apply the styles
+    snapp.applystyle([hello, wow], myStyle)
+    
+    // Later remove the same styles
+    snapp.removestyle([hello, wow], myStyle)
+})
+```
+
+### Remove All Inline Styles
+
+```jsx
+snapp.on("DOM", () => {
+    const [hello, wow] = snapp.select(["#hello", "#wow"])
+    
+    // Remove all inline styles from elements
+    snapp.applystyle([hello, wow], true) // To remove all inline style
+})
+```
+
+### snapp.remove Examples
+
+```jsx
+const [msgBody, feedBody] = snapp.select(["#msgBody", "#feedBody"])
+snapp.remove(msgBody) // Remove msgBody from the DOM
+
+snapp.remove([msgBody, feedBody]) // Remove elements from DOM
+```
+**Snapp Cleanup:** Snapp tracks each element and its event listeners! When an element is removed from the DOM, Snapp automatically removes all event listeners attached to that element!
 
 ---
 

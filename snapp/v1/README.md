@@ -5,7 +5,10 @@
 
 # Snapp Framework
 
-> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, multi-page applications using familiar JSX syntax.**
+> A modern JavaScript framework that renders components **directly to the browser DOM** with **zero virtual DOM overhead**.
+<br />
+Build **fast, multi-page applications** using the familiar **JSX syntax** you already know.
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with JavaScript](https://img.shields.io/badge/Built%20with-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)

@@ -210,10 +210,16 @@ const snapp = (() => {
           }
           
           if(key.startsWith("on") && key !== "on" && typeof value === "function") {
-            const eventType = key.toLowerCase().slice(2);
-            ele.setAttribute("snapp-data", dataId);
-            addEventListener(eventType, value, dataId);
-            ele.setAttribute("snapp-e-"+eventType, "true");
+            let lowerCaseKey = key.toLowerCase();
+            if (lowerCaseKey === "ondoubleclick") lowerCaseKey = "ondblclick";
+            if (lowerCaseKey in ele) {
+              const eventType = lowerCaseKey.slice(2);
+              ele.setAttribute("snapp-data", dataId);
+              addEventListener(eventType, value, dataId);
+              ele.setAttribute("snapp-e-"+eventType, "true");
+            } else {
+              console.warn(`Event "${lowerCaseKey}", Do not exist for `, ele)
+            }
             continue;
           }
 

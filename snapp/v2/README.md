@@ -1,10 +1,14 @@
+
 <p align="center">
   <img src="snapp.png" alt="Snapp Framework Logo" width="200">
 </p>
 
 # Snapp Framework
 
-> **A modern JavaScript framework that renders components directly to the browser DOM with zero virtual DOM overhead. Build fast, multi-page applications using familiar JSX syntax.**
+> A modern JavaScript framework that renders components **directly to the browser DOM** with **zero virtual DOM overhead**.
+<br />
+Build **fast, multi-page applications** using the familiar **JSX syntax** you already know.
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built with JavaScript](https://img.shields.io/badge/Built%20with-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -20,6 +24,10 @@
 - [Creator & Support](#creator--support)
 
 ---
+
+## Snapp v2
+Snapp v2 is **optimized** and **faster** than v1.  
+It offers improved performance and efficiency compared to the previous version.
 
 ## Introduction
 
@@ -46,15 +54,17 @@ Snapp gives you **manual DOM power** with **modern component convenience**. Know
 const counter = snapp.dynamic(0);
 
 return (
-  <div>
-    <h2>Count: {() => counter.value}</h2>
-    <button onclick={() => counter.update(counter.value + 1)}>
-      Increase
-    </button>
-    <button onclick={() => counter.update(counter.value - 1)}>
-      Decrease
-    </button>
-  </div>
+<>
+  <h2>Count: {() => counter.value}</h2>
+  <button
+    onclick={() => counter.update(counter.value + 1)>
+  Click To Increase
+  </button>
+  <button
+    onclick={() => counter.update(counter.value - 1)}>
+  Click To Decrease
+  </button>
+</>
 );
 ```
 
@@ -108,8 +118,9 @@ export default const UserDetails = (props) => {
 import snapp from '../snapp.js';
 import UserDetails from './components/UserDetails.jsx';
 
+const snappBody = document.querySelector("#snapp-app");
+
 const App = () => {
-    const snappBody = document.querySelector("#snapp-app");
 
     // Fetch user data and render when ready
     fetch('/api/user/123')
@@ -131,7 +142,6 @@ const App = () => {
     return <UserDetails data={null} />;
 }
 
-const snappBody = document.querySelector("#snapp-app");
 snapp.render(snappBody, App());
 ```
 
@@ -221,9 +231,6 @@ cd my-awesome-app
 
 # Start development with hot reload
 snapp build
-
-# Build for production deployment  
-snapp zip
 ```
 
 ### Project Structure
@@ -264,8 +271,8 @@ touch contact.html
 # 2. Create JSX component  
 touch views/contact.jsx
 
-# 3. The build system automatically detects and compiles new files
-snapp build # Run this once again to enable hot reload during development
+# 3.# Run build once again to enable hot reload during development
+snapp build 
 
 # 4. Snapp will build and generate all files in the src folder
 ```
@@ -310,11 +317,12 @@ snapp.render(snappBody, App());
 
 ---
 
-**NOTE: You only need to run 'snapp build' once - it will automatically recompile when you save your code!**
+**NOTE: You only need to run 'snapp build' once - it will automatically recompile when you save/edit your code!**
 
 ---
 
 ## Tutorial Section
+**Note: This Tutorial contain only what is avaliable in snapp V2**
 
 ### Getting Started - Two Ways to Initialize
 
@@ -401,30 +409,36 @@ const dynamicText = snapp.dynamic("Hello");
 // ✅ Mixed usage
 <div>
   Static: {staticText}; // won't update
+  Static: {dynamicText.value}; // won't update
+  Dynamic: {() => dynamicText.value}; // will update
   Dynamic: {() => dynamicText.value + staticText}; // will update
 </div>
+
+// Use {() => } for dynaminc
 ```
 
 #### How Dynamic State Works
 
-**Snapp Dynamic State** lets you change element text content, attributes, and styles dynamically without re-rendering your component / element!
+**Snapp Dynamic State** lets you change element text content, attributes, and styles dynamically without re-rendering your component/element!
 
 ```jsx
 // Create dynamic state
 const message = snapp.dynamic("Hello World");
 
 // Use in JSX with arrow function syntax
-<div>{() => message.value}</div>
+<div>Message: {() => message.value}</div>
 
 // Update the state
-message.update("New Message"); // Only the text node updates!
+message.update("New Message");
+// Only the text node updates!
+// Only "Hello World" will update to "New Message"
 ```
 
 #### Key Dynamic State Features
 
 - **Fast Updates**: When you update a state, Snapp only updates the specific textNode/attribute/style property that changed, not the entire element.
 - **Smart Syntax**: Regular variables use `{variable}`, dynamic state uses `{() => dynamicState.value}`
-- **Automatic Cleanup**: When you delete an element, Snapp automatically cleans up all reference data!
+- **Automatic Cleanup**: When you delete an element, Snapp automatically cleans up all reference data to the state!
 
 #### Dynamic State Usage Examples
 
@@ -444,26 +458,6 @@ const itemId = snapp.dynamic("item-1");
 ```jsx
 const color = snapp.dynamic("blue");
 <p style={{ color: () => color.value }}>Colorful text</p>
-```
-
-**Complete Interactive Counter:**
-```jsx
-const counter = snapp.dynamic(0);
-
-return (
-  <div>
-    <h2>Count: {() => counter.value}</h2>
-    <button onclick={() => counter.update(counter.value + 1)}>
-      Increase
-    </button>
-    <button onclick={() => counter.update(counter.value - 1)}>
-      Decrease
-    </button>
-    <button onclick={() => counter.update(0)}>
-      Reset
-    </button>
-  </div>
-);
 ```
 
 **Note:** For regular variables you can still use `{variable}` but for dynamic state variables use `{() => variable.value}`
@@ -537,30 +531,15 @@ snapp.selectAll([".class1", ".class2"]) // Returns arrays of arrays of elements
 // Snapp follows HTML attribute naming conventions:
 
 <button ondblclick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
-<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // ❌ Won't work
-<button ondoubleclick={() => alert("Hi!")}>Double Click</button> // ❌ Won't work
+<button onDoubleClick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
+<button ondoubleclick={() => alert("Hi!")}>Double Click</button> // ✅ Will work
 ```
 
 Snapp uses HTML attribute naming and converts everything to lowercase. `onClick` is treated the same as `onclick`.
 
-**Important:** Snapp follows HTML event attribute naming conventions exactly as they appear in HTML. For example:
-- Use `ondblclick` (not `onDoubleClick` or `ondoubleclick`)
-- Use `onmouseover` (not `onMouseOver`)
-- Use `onkeypress` (not `onKeyPress`)
-- Use `onfocusin` (not `onFocusIn`)
+**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work.
 
-**Note:** Attribute names like `"className"` or `"class"` will work, `"htmlFor"` or `"for"` will work. All camelCase is converted to lowercase: `"onClick"` becomes `"onclick"`, but event names must match HTML standards exactly.
-
-**Snapp Cleanup:** Snapp tracks each element and its event listeners! When an element is removed from the DOM, Snapp automatically removes all event listeners attached to that element!
-
-### snapp.remove Examples
-
-```jsx
-const [msgBody, feedBody] = snapp.select(["#msgBody", "#feedBody"])
-snapp.remove(msgBody) // Remove msgBody from the DOM
-
-snapp.remove([msgBody, feedBody]) // Remove elements from DOM
-```
+`"onDoubleClick"` or `"ondblclick"` will both work, but every other event name must match HTML event name. [See Event Attributes](https://www.w3schools.com/tags/ref_eventattributes.asp)
 
 ### snapp.applystyle Examples
 
@@ -623,6 +602,16 @@ snapp.on("DOM", () => {
     snapp.applystyle([hello, wow], true) // To remove all inline style
 })
 ```
+
+### snapp.remove Examples
+
+```jsx
+const [msgBody, feedBody] = snapp.select(["#msgBody", "#feedBody"])
+snapp.remove(msgBody) // Remove msgBody from the DOM
+
+snapp.remove([msgBody, feedBody]) // Remove elements from DOM
+```
+**Snapp Cleanup:** Snapp tracks each element and its event listeners! When an element is removed from the DOM, Snapp automatically removes all event listeners attached to that element!
 
 ---
 
