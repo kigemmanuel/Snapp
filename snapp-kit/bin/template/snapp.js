@@ -30,11 +30,15 @@ const snapp = (() => {
   
   const dynamicData = {};
   const dynamicDependencies = new Map();
-  console.log("Dynamic => ", dynamicData)
-  console.log("Dependencies => ", dynamicDependencies)
   
   const eventListener = {};
   const elementEvent = {};
+
+  const eventMap = { 
+    'onmouseenter': 'onmouseover', 
+    'onmouseleave': 'onmouseout',
+    'ondoubleclick': 'ondblclick'
+  };
 
   const create = (element, props, ...children) => {
     const flatChildren = flattenChildren(children);
@@ -210,10 +214,17 @@ const snapp = (() => {
           }
           
           if(key.startsWith("on") && key !== "on" && typeof value === "function") {
-            const eventType = key.toLowerCase().slice(2);
-            ele.setAttribute("snapp-data", dataId);
-            addEventListener(eventType, value, dataId);
-            ele.setAttribute("snapp-e-"+eventType, "true");
+            let lowerCaseKey = key.toLowerCase();
+            lowerCaseKey = eventMap[lowerCaseKey] || lowerCaseKey;
+            
+            if (lowerCaseKey in ele) {
+              const eventType = lowerCaseKey.slice(2);
+              ele.setAttribute("snapp-data", dataId);
+              addEventListener(eventType, value, dataId);
+              ele.setAttribute("snapp-e-"+eventType, "true");
+            } else {
+              console.warn(`Event "${lowerCaseKey}", Do not exist for `, ele)
+            }
             continue;
           }
 
@@ -356,8 +367,13 @@ const snapp = (() => {
     
     const eventTemplate = (element) => {
       const target = element.target;
-      const elWithAttr = target.closest(`[snapp-e-${eventType}]`);
 
+      if (!target || target.nodeType !== 1) {
+        console.log('Target is not an element, skipping...');
+        return;
+      }   
+
+      const elWithAttr = target.closest(`[snapp-e-${eventType}]`);
       if (!elWithAttr) return;
       const elementDataId = elWithAttr.getAttribute("snapp-data");
       elementEvent[eventType]?.[elementDataId](element)

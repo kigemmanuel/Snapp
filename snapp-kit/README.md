@@ -35,6 +35,7 @@ Snapp Kit is a **global build tool** - You install it once globally and use it i
 - **🌍 Global Installation** - Install once, use everywhere
 - **⚡ Powered by esbuild** - Ultra-fast JSX/TSX/TS compilation
 - **🔄 Live Building** - Automatic rebuilding on file changes
+- **📄 Page Generator** - Quickly create new pages with templates
 - **🚀 Zero Configuration** - Just point and build
 
 ---
@@ -66,10 +67,15 @@ snapp --version
 snapp create my-app
 cd my-app
 
-# 2. Start building (watches for changes)
+# 2. Generate new pages instantly
+snapp page home
+snapp page about
+snapp page contact
+
+# 3. Start building (watches for changes)
 snapp build
 
-# 3. Edit files in views/ folder - they automatically compile to src/
+# 4. Edit files in views/ folder - they automatically compile to src/
 ```
 
 **Or use in any existing folder:**
@@ -77,6 +83,9 @@ snapp build
 ```bash
 # Navigate to any snapp project folder
 cd /path/to/my-existing-project
+
+# Create new pages
+snapp page myNewPage
 
 # Start building JSX files from /views to /src
 snapp build
@@ -106,6 +115,34 @@ my-project/
 └── README.md
 ```
 
+### `snapp page <page-name>`
+
+**Generate new pages instantly** - creates both HTML template and JSX component files.
+
+```bash
+snapp page myNewPage
+```
+
+**What happens:**
+- Creates `myNewPage.html` in root directory
+- Creates `views/myNewPage.jsx` with component template
+- Replaces template variables with your page name
+- Ready to use immediately
+
+**Example workflow:**
+```bash
+# 1. Generate a new page
+snapp page contact
+
+# 2. Start building to compile JSX to vanilla JS
+snapp build
+
+# 3. Files created and compiled:
+#    ✅ contact.html (HTML template)
+#    ✅ views/contact.jsx (JSX component) 
+#    ✅ src/contact.js (auto-compiled vanilla JS)
+```
+
 ### `snapp build`
 
 **The main command** - compiles JSX/TSX files from `views/` to `src/` folder.
@@ -119,14 +156,6 @@ snapp build
 - Compiles `.jsx`, `.tsx`, `.ts`, `.js` files using **esbuild**
 - Outputs vanilla JavaScript to `src/` folder
 - Runs continuously until you stop it (Ctrl+C)
-
-### `snapp zip`
-
-Compiles everything and creates a production-ready zip file.
-
-```bash
-snapp zip
-```
 
 ### `snapp --help` / `snapp --version`
 
@@ -151,6 +180,7 @@ node my_script.js     # ✅ Works anywhere
 # Snapp Kit (global installation)
 snapp --version         # ✅ Works anywhere
 snapp build            # ✅ Works anywhere
+snapp page contact     # ✅ Works anywhere
 ```
 
 ### No Dependencies Required
@@ -166,6 +196,7 @@ npm run build
 **Snapp Kit:**
 ```bash
 # ✅ Just build - no setup needed
+snapp page home
 snapp build
 ```
 
@@ -176,6 +207,7 @@ Snapp Kit uses **esbuild** (fast JavaScript bundler) to compile your files:
 ```
 views/index.jsx     →  src/index.js
 views/about.tsx     →  src/about.js
+views/contact.jsx   →  src/contact.js
 views/components/   →  src/components/
 ```
 
@@ -189,95 +221,122 @@ views/components/   →  src/components/
 
 ## Examples
 
-### Example 1: Use in Any Folder
+### Example 1: Quick Page Generation
+
+```bash
+# Create a new page instantly
+snapp page portfolio
+
+# What gets created:
+# ✅ portfolio.html (in root)
+# ✅ views/portfolio.jsx (JSX component)
+
+# Compile it
+snapp build
+# ✅ Creates src/portfolio.js automatically
+```
+
+### Example 2: Use in Any Folder
 
 ```bash
 # Go to any folder
 mkdir my-simple-site
 cd my-simple-site
 
-# Create a views folder and JSX file
-mkdir views
-echo 'export default () => <h1>Hello World</h1>' > views/index.jsx
+# Generate pages
+snapp page home
+snapp page about
 
-# Build it
+# Build them
 snapp build
-# ✅ Creates src/index.js automatically
+# ✅ Creates src/home.js and src/about.js automatically
 ```
 
-### Example 2: Working with Existing Projects
+### Example 3: Working with Existing Projects
 
 ```bash
 # You have an existing snapp project
 cd my-existing-website
 
+# Add new pages
+snapp page blog
+snapp page contact
+
 # Just start building
 snapp build
-# ✅ Compiles any JSX/TSX files in views/ folder
+# ✅ Compiles all JSX/TSX files in views/ folder
 ```
 
-### Example 3: Complete Project Structure
-
+### Example 4: Complete Project Structure
 ```
-my-website/
-├── views/                    # Your source files
-│   ├── index.jsx            # Homepage
-│   ├── about.jsx            # About page  
-│   ├── contact.tsx          # Contact (TypeScript)
-│   └── components/          # Reusable components
+my-snapp-app/
+├── views/           # 🎯 Source JSX/TSX components
+│   ├── index.jsx    # Main page component
+│   ├── about.jsx    # About page component  
+│   ├── user.jsx     # User profile component
+│   └── components/  # Reusable components
 │       ├── Header.jsx
-│       └── Footer.jsx
-├── src/                     # Auto-generated (don't edit)
+|       └── UserCard.jsx
+|    
+├── src/             # 📦 JS files (auto-generated)
 │   ├── index.js
 │   ├── about.js
-│   └── contact.js
-├── index.html               # Your HTML templates
-├── about.html
-├── contact.html
-└── snapp.js                # Snapp framework
+│   └── user.js
+├── index.html       # 📄 Homepage template
+├── about.html       # 📄 About page template
+├── user.html        # 📄 User page template
+└── snapp.js         # ⚡ Snapp core library
 ```
 
-### Example 4: Real JSX File
+### Example 5: Generated Page Template
 
+When you run `snapp page contact`, here's what gets created:
+
+**contact.html:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact</title>
+</head>
+<body>
+    <div id="snapp-app"></div>
+    <script type="module" src="src/contact.js"></script>
+</body>
+</html>
+```
+
+**views/contact.jsx:**
 ```jsx
-// views/index.jsx
 import snapp from '../snapp.js';
 
-const App = () => {
-    const handleClick = () => {
-        alert('Hello from Snapp!');
-    };
-
+const Contact = () => {
     return (
-        <>
-            <h1>Welcome to My Site</h1>
-            <button onclick={handleClick}>Click me</button>
-        </>
+        <div className="contact-page">
+            <h1>Contact</h1>
+            <p>Welcome to the Contact page!</p>
+        </div>
     );
 }
 
 const snappBody = document.querySelector("#snapp-app");
-snapp.render(snappBody, App());
+snapp.render(snappBody, Contact());
 ```
 
-**After `snapp build`:**
+**After `snapp build` → src/contact.js:**
 ```javascript
-// src/index.js (auto-generated vanilla JavaScript)
+// Auto-generated vanilla JavaScript
 import snapp from '../snapp.js';
 
-const App = () => {
-    const handleClick = () => {
-        alert('Hello from Snapp!');
-    };
-
-    return snapp.createElement('div', {}, 
-        snapp.create('h1', {}, 'Welcome to My Site'),
-        snapp.create('button', { onclick: handleClick }, 'Click me')
+const Contact = () => {
+    return snapp.createElement('div', { className: 'contact-page' },
+        snapp.createElement('h1', {}, 'Contact'),
+        snapp.createElement('p', {}, 'Welcome to the Contact page!')
     );
 }
 
 const snappBody = document.querySelector("#snapp-app");
-snapp.render(snappBody, App());
+snapp.render(snappBody, Contact());
 ```
 
 ---
@@ -298,6 +357,9 @@ snapp.render(snappBody, App());
 #### "What if I don't have a views/ folder?"
 Snapp Kit will show an error. Create the folder and add your JSX files there.
 
+#### "Can I customize the page templates?"
+**Yes!** Modify the `page/` folder in your Snapp Kit installation directory.
+
 ### Common Issues
 
 #### Command not found: snapp
@@ -307,6 +369,16 @@ npm install -g snapp-kit
 
 # Check if it's in your PATH
 snapp --version
+```
+
+#### Page generation not working
+```bash
+# Make sure you're in a project directory
+# Make sure page templates exist in CLI installation
+
+# Check what was created
+ls *.html
+ls views/
 ```
 
 #### Files not compiling
@@ -334,12 +406,17 @@ sudo npm install -g snapp-kit
 **✅ No Dependencies Required**
 - No `node_modules` folder needed
 - No `package.json` required
-- No complex configuration folder each project
+- No complex configuration for each project
 
 **✅ Global Installation**
 - Install once, use anywhere
 - Works in any folder on your system
 - Just `snapp build` and you're done
+
+**✅ Instant Page Generation**
+- `snapp page <name>` creates ready-to-use templates
+- HTML + JSX components generated instantly
+- Template variables automatically replaced
 
 **✅ Focus on Simplicity**
 - One command does everything: `snapp build`

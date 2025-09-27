@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
-import { join, dirname } from 'path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync, copyFileSync } from 'fs';
+import { join, dirname, extname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +44,15 @@ if (!existsSync(templateDir)) {
   process.exit(1);
 }
 
+// File extensions that should be treated as text files for template replacement
+const textFileExtensions = ['.html', '.js', '.jsx', '.ts', '.tsx', '.css', '.scss', '.json', '.md', '.txt', '.xml', '.svg', '.env'];
+
+// Check if file should be processed as text
+const isTextFile = (filePath) => {
+  const ext = extname(filePath).toLowerCase();
+  return textFileExtensions.includes(ext);
+};
+
 // Copy template recursively
 const copyTemplate = (src, dest) => {
   const stats = statSync(src);
@@ -58,15 +67,20 @@ const copyTemplate = (src, dest) => {
       copyTemplate(join(src, file), join(dest, file));
     }
   } else {
-    let content = readFileSync(src, 'utf8');
+    if (isTextFile(src)) {
+      // Process text files with template replacement
+      let content = readFileSync(src, 'utf8');
+      
+      // Replace template variables
+      content = content.replace(/{{APP_NAME}}/g, appName)
+      
+      writeFileSync(dest, content);
+    } else {
+      // Copy binary files (images, fonts, etc.) directly without processing
+      copyFileSync(src, dest);
+    }
     
-    // Replace template variables
-    content = content
-      .replace(/{{APP_NAME}}/g, appName)
-      .replace(/{{APP_NAME_CAMEL}}/g, toCamelCase(appName));
-    
-    writeFileSync(dest, content);
-    // console.log(`📄 Created: ${dest}`);
+    console.log(`📄 Created: ${dest}`);
   }
 };
 

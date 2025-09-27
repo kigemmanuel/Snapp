@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 
 // Snapp framework version (update this manually)
-const SNAPP_VERSION = '1.1.0';
+const SNAPP_VERSION = '2.0.0';
 // Snapp framework version (update this manually)
 
 
@@ -77,6 +77,7 @@ General Options:
 
 Examples:
   snapp create <App Name>         # Create new Snapp app
+  snapp page <Page Name>          # Create new Page (Auto generate)
   snapp build                     # Build and watch (no minify)
   snapp build -M                  # Build and watch with minify
   snapp build --minify            # Build and watch with minify
@@ -103,7 +104,7 @@ if (!command || command === '-h' || command === '--help') {
 const executeCommand = (scriptName, scriptArgs) => {
   const scriptPath = join(__dirname, scriptName);
   
-  console.log(`🔥 Running ${command} command...`);
+  console.log(`Running ${command} command...`);
   
   const child = spawn('node', [scriptPath, ...scriptArgs], {
     stdio: 'inherit',
@@ -144,6 +145,12 @@ switch (command.toLowerCase()) {
     // Pass remaining args to build.js (like -M, --minify)
     const buildArgs = args.slice(1);
     executeCommand('build.js', buildArgs);
+    break;
+
+  case 'page':
+    // Pass remaining args to page.js (<Page-Name>)
+    const pageArgs = args.slice(1);
+    executeCommand('page.js', pageArgs);
     break;
 
   default:
