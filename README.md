@@ -243,9 +243,9 @@ my-snapp-app/
 │   ├── user.jsx     # User profile component
 │   └── components/  # Reusable components
 │       ├── Header.jsx
-│       ├── Footer.jsx
-│       └── UserCard.jsx
-├── src/             # 📦 Built JavaScript files (auto-generated)
+|       └── UserCard.jsx
+|    
+├── src/             # 📦 JS files (auto-generated)
 │   ├── index.js
 │   ├── about.js
 │   └── user.js
@@ -265,55 +265,14 @@ my-snapp-app/
 ### Adding New Pages
 
 ```bash
-# 1. Create HTML template
-touch contact.html
-
-# 2. Create JSX component  
-touch views/contact.jsx
+# 1. Run snapp page command
+snapp page myNewPage
 
 # 3.# Run build once again to enable hot reload during development
 snapp build 
-
-# 4. Snapp will build and generate all files in the src folder
 ```
 
-**Example `contact.html`:**
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Contact Us - Get In Touch</title>
-    <meta name="description" content="Contact our team for support and inquiries">
-</head>
-<body id="snapp-app">
-    <h1>Contact Us</h1>
-    <script type="module" src="src/contact.js"></script>
-</body>
-</html>
-```
-
-**Example `views/contact.jsx`:**
-```jsx
-// views/contact.jsx
-import snapp from '../snapp.js'
-import Button from 'components/Button.jsx'
-
-const App = () => {
-    return (
-      <>
-       <h2>Contact Us</h2>
-       {/* Your contact page content */}
-       {/* Additional contact page elements */}
-       {/* More contact page features */}
-      </>
-    )
-}
-
-const snappBody = document.querySelector("#snapp-app");
-snapp.render(snappBody, App());
-```
-
-**Snapp build will compile and auto-generate `src/contact.js`**
+**Snapp build will compile and auto-generate `myNewPage.html`, `views/myNewPage.js` and `src/myNewPage.js`**
 
 ---
 
