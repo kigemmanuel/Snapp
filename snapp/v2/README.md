@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="Snapp.png" alt="Snapp Framework Logo" width="200">
+  <img src="snapp.png" alt="snapp Framework Logo" width="200">
 </p>
 
 # Snapp Framework
