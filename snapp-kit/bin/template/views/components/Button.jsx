@@ -1,5 +1,5 @@
 
-import snapp from '../../snapp'
+import snapp from "../../src/snapp.js"
 
 const Button = ({props, count}) => {
 

@@ -45,7 +45,7 @@ if (!existsSync(templateDir)) {
 }
 
 // File extensions that should be treated as text files for template replacement
-const textFileExtensions = ['.html', '.js', '.jsx', '.ts', '.tsx', '.css', '.scss', '.json', '.md', '.txt', '.xml', '.svg', '.env'];
+const textFileExtensions = ['.html', '.js', '.jsx', '.ts', '.tsx', '.css'];
 
 // Check if file should be processed as text
 const isTextFile = (filePath) => {

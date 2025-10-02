@@ -1,4 +1,4 @@
-import snapp from "../snapp.js"
+import snapp from "../src/snapp.js"
 
 const App = () => {
     return <h2>{{PAGE_NAME}}</h2>

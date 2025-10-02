@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 
 // Snapp framework version (update this manually)
-const SNAPP_VERSION = '2.0.0';
+const SNAPP_VERSION = '2.1.0';
 // Snapp framework version (update this manually)
 
 
@@ -65,26 +65,29 @@ Usage:
   snapp <command> [options]
 
 Commands:
-  create              Create a new Snapp application
-  build               Build your Snapp project
+  create         # Create a new Snapp app
+  build          # Build Snapp project
   
 Build Options:
-  -M, --minify        Minify output files
+  -M, --minify   # Minify output files
   
 General Options:
-  -v, --version       Show version information
-  -h, --help          Show this help message
+  -v, --version  # Show version
+  -h, --help     # Show this this message
 
 Examples:
-  snapp create <App Name>         # Create new Snapp app
-  snapp page <Page Name>          # Create new Page (Auto generate)
-  snapp build                     # Build and watch (no minify)
-  snapp build -M                  # Build and watch with minify
-  snapp build --minify            # Build and watch with minify
-  snapp -v                        # Show version info
-  snapp --version                 # Show version info
-  snapp -h                        # Show help
-  snapp --help                    # Show help
+  snapp create <App Name>  # New Snapp app
+  snapp page <Page Name>   # New Page
+  snapp build              # Build
+  snapp build -W           # Build & Watch
+  snapp build --watch      # Build & Watch
+  snapp build -M           # Build & minify
+  snapp build --minify     # Build & minify
+  snapp build -M -W        # minify & watch
+  snapp -v                 # Show version
+  snapp --version          # Show version
+  snapp -h                 # Show help
+  snapp --help             # Show help
 `);
 };
 

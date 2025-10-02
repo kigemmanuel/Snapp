@@ -1,4 +1,4 @@
-import snapp from "../snapp.js";
+import snapp from "./snapp.js";
 
 // views/components/Button.jsx
 var Button = ({ props, count }) => {
@@ -35,15 +35,17 @@ var App = () => {
     "place-items": "center",
     top: "50%",
     left: "50%",
+    width: "100%",
     transform: "translate(-50%, -50%)"
   };
   const aHref = {
+    marginTop: "10px",
     color: "#4a90e2",
     textDecoration: "none",
     "font-weight": "bold"
   };
   const count = snapp.dynamic(0);
-  return /* @__PURE__ */ snapp.create("div", { style: centerDiv }, /* @__PURE__ */ snapp.create("img", { style: { width: "100%", height: "200px" }, src: "assets/snapp.png", alt: "" }), /* @__PURE__ */ snapp.create("h2", null, "Welcome to snapp: ", () => count.value), /* @__PURE__ */ snapp.create(Button_default, { count }, "Click To Count"), /* @__PURE__ */ snapp.create("br", null), /* @__PURE__ */ snapp.create("a", { style: aHref, target: "_blank", href: "https://github.com/kigemmanuel/Snapp" }, "Learn Snapp"), /* @__PURE__ */ snapp.create("span", { style: { ...aHref, color: "#0C2340" } }, "Please star and follow"));
+  return /* @__PURE__ */ snapp.create("div", { style: centerDiv }, /* @__PURE__ */ snapp.create("img", { style: { width: "auto", height: "200px" }, src: "assets/snapp.png", alt: "" }), /* @__PURE__ */ snapp.create("h2", null, "Welcome to snapp: ", () => count.value), /* @__PURE__ */ snapp.create(Button_default, { count }, "Click To Count"), /* @__PURE__ */ snapp.create("br", null), /* @__PURE__ */ snapp.create("a", { style: aHref, target: "_blank", href: "https://github.com/kigemmanuel/Snapp" }, "Learn Snapp"), /* @__PURE__ */ snapp.create("span", { style: { ...aHref, color: "#0C2340" } }, "Please star and follow"));
 };
 var SnappBody = document.querySelector("#snapp-body");
 snapp.render(SnappBody, App());

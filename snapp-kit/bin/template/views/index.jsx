@@ -1,5 +1,5 @@
 
-import snapp from "../snapp.js"
+import snapp from "../src/snapp.js"
 import Button from "./components/Button.jsx"
 
 const App = () => {
@@ -10,10 +10,12 @@ const App = () => {
     "place-items": "center",
     top: "50%",
     left: "50%",
+    width: "100%",
     transform: "translate(-50%, -50%)"
   }
 
   const aHref = {
+    marginTop:  "10px",
     color: "#4a90e2",
     textDecoration: "none",
     "font-weight": "bold"
@@ -23,7 +25,7 @@ const App = () => {
 
   return (
     <div style={centerDiv}>
-      <img style={{width: "100%", height: "200px"}} src="assets/snapp.png" alt="" />
+      <img style={{width: "auto", height: "200px"}} src="assets/snapp.png" alt="" />
       <h2>Welcome to snapp: {() => count.value}</h2>
       <Button count={count}>Click To Count</Button>
       <br />

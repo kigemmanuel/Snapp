@@ -6,7 +6,7 @@
 # Snapp Framework
 
 > A modern JavaScript framework that renders components **directly to the browser DOM** with **zero virtual DOM overhead**.
-<br />
+>
 Build **fast, multi-page applications** using the familiar **JSX syntax** you already know.
 
 
@@ -57,7 +57,7 @@ return (
 <>
   <h2>Count: {() => counter.value}</h2>
   <button
-    onclick={() => counter.update(counter.value + 1)>
+    onclick={() => counter.update(counter.value + 1)}>
   Click To Increase
   </button>
   <button
@@ -115,7 +115,7 @@ export default const UserDetails = (props) => {
 **Main Application Logic:**
 ```jsx
 // views/user.jsx
-import snapp from '../snapp.js';
+import snapp from "../src/snapp.js"
 import UserDetails from './components/UserDetails.jsx';
 
 const snappBody = document.querySelector("#snapp-app");
@@ -162,7 +162,7 @@ snapp.render(snappBody, App());
 **Interactive Component:**
 ```jsx
 // views/login.jsx
-import snapp from '../snapp.js';
+import snapp from "../src/snapp.js"
 
 const App = () => {
   const showLoginForm = () => {
@@ -230,7 +230,7 @@ snapp create my-awesome-app
 cd my-awesome-app
 
 # Start development with hot reload
-snapp build
+snapp build -W
 ```
 
 ### Project Structure
@@ -243,16 +243,19 @@ my-snapp-app/
 │   ├── user.jsx     # User profile component
 │   └── components/  # Reusable components
 │       ├── Header.jsx
-|       └── UserCard.jsx
-|    
-├── src/             # 📦 JS files (auto-generated)
-│   ├── index.js
+│       ├── Footer.jsx
+│       └── UserCard.jsx
+|
+├── src/ # 📦 Built JS files (snapp build)
+│   ├── snapp.js   # Snapp runtime
+|   ├── index.js
 │   ├── about.js
 │   └── user.js
+|
 ├── index.html       # 📄 Homepage template
 ├── about.html       # 📄 About page template
 ├── user.html        # 📄 User page template
-└── snapp.js         # ⚡ Snapp core library
+└── 
 ```
 
 ### How Building Works
@@ -269,7 +272,7 @@ my-snapp-app/
 snapp page myNewPage
 
 # 3.# Run build once again to enable hot reload during development
-snapp build 
+snapp build -W
 ```
 
 **Snapp build will compile and auto-generate `myNewPage.html`, `views/myNewPage.js` and `src/myNewPage.js`**
@@ -290,7 +293,7 @@ snapp build
 <!-- index.html -->
 <div id="snapp-body"></div>
 <script type="module">
-    import snapp from './snapp.js'
+    import snapp from './src/snapp.js'
     import App from './src/index.js'
 
     const snappBody = document.querySelector("#snapp-body");
@@ -314,7 +317,7 @@ export default const App = () => {
 
 ```jsx
 // views/index.jsx
-import snapp from '../snapp.js'
+import snapp from "../src/snapp.js"
 
 const App = () => {
     return <h2>Hello Snapp</h2>
@@ -427,6 +430,10 @@ const color = snapp.dynamic("blue");
 snapp.render(parentElement, component, type) // Render a component with specified type
 snapp.render(parentElement, component, 'append') // Will append to existing content
 snapp.render(parentElement, component) // Default behavior - replaces existing content
+snapp.render(parentElement, component, undefined, callBack)
+
+snapp.render(parentElement, component, undefined, (e) => console.log(e))
+//Return true if successful and false if not
 ```
 
 Other available types: `'prepend'`, `'after'`, `'before'`, `'replace'`
@@ -574,15 +581,7 @@ snapp.remove([msgBody, feedBody]) // Remove elements from DOM
 
 ---
 
-## Creator & Support
-
-### Creator
-
-**Kig Emmanuel** - *Framework Creator*
-- Passionate JavaScript developer who created Snapp to bridge the gap between modern component development and traditional multi-page applications
-- Focused on performance, simplicity, and developer experience
-
-### Support & Community
+### Support
 
 - 🐛 **Report Issues**: [GitHub Issues](https://github.com/kigemmanuel/snapp/issues)
 - 💡 **Feature Requests**: [GitHub Discussions](https://github.com/kigemmanuel/snapp/discussions)

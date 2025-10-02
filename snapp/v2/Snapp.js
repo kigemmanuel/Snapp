@@ -1,9 +1,9 @@
 
 /*!
- * Snapp Framework v2.0.0
+ * Snapp Framework v2.1.0
  * A lightweight JSX-like framework for vanilla JavaScript
  *
- * @version 2.0.0
+ * @version 2.1.0
  * @license MIT
  * @repository https://github.com/kigemmanuel/Snapp
  *
@@ -40,6 +40,19 @@ const snapp = (() => {
     'ondoubleclick': 'ondblclick'
   };
 
+  const SVG_ELEMENTS = new Set([
+    'svg', 'circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect',
+    'text', 'textPath', 'tspan', 'defs', 'g', 'marker', 'mask', 'pattern',
+    'switch', 'symbol', 'linearGradient', 'radialGradient', 'stop', 'filter',
+    'feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite',
+    'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight',
+    'feDropShadow', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR',
+    'feGaussianBlur', 'feImage', 'feMerge', 'feMergeNode', 'feMorphology',
+    'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile',
+    'feTurbulence', 'image', 'use', 'foreignObject', 'animate', 'animateMotion',
+    'animateTransform', 'mpath', 'set', 'clipPath', 'desc', 'metadata', 'view'
+  ]);
+
   const create = (element, props, ...children) => {
     const flatChildren = flattenChildren(children);
     if (element != "<>" && typeof element === "string")
@@ -53,10 +66,12 @@ const snapp = (() => {
       return createFragment(flatChildren);
   }
 
-  const render = (body, App, type) => {
+  const render = (body, App, type, callBack) => {
 
-    if (!document.contains(body))
-      return console.error("ERROR: Rending to a non existing/removed element", body)
+    if (!document.contains(body)) {
+      console.error("ERROR: Rending to a non existing/removed element", body)
+      if (typeof callBack === "function") return callBack(false)
+    }
 
     if (typeof App === 'string' || typeof App === 'number' || App instanceof Element ||  App instanceof DocumentFragment) {
       DOMReady = false;
@@ -89,12 +104,12 @@ const snapp = (() => {
 
       DOMReady = true;
       document.dispatchEvent(new Event("DOM"))
+      if (typeof callBack === "function") return callBack(true);
 
     } else {
-      body.replaceChildren("Failed to render, check console")
-      console.log("Failed to render! ", typeof App, App)
+      console.error("Failed to render! ", typeof App, App)
+      if (typeof callBack === "function") return callBack(false)
     }
-
   }
 
   const remove = (items) => {
@@ -173,7 +188,10 @@ const snapp = (() => {
   }
 
   const createElement = (element, props, children) => {
-    const ele = document.createElement(element);
+    const ele = SVG_ELEMENTS.has(element)
+      ? document.createElementNS("http://www.w3.org/2000/svg", element)
+      : document.createElement(element);
+
     dataId++
 
     if (props) {
@@ -253,7 +271,7 @@ const snapp = (() => {
           ele.setAttribute(key, value);
         }
     }
-
+    
     children.forEach(node => {
       if (typeof node === 'string' || typeof node === 'number' || node instanceof Element ||  node instanceof DocumentFragment) {
         ele.append(node);

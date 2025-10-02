@@ -34,7 +34,8 @@ Snapp Kit is a **global build tool** - You install it once globally and use it i
 ### Key Features:
 - **🌍 Global Installation** - Install once, use everywhere
 - **⚡ Powered by esbuild** - Ultra-fast JSX/TSX/TS compilation
-- **🔄 Live Building** - Automatic rebuilding on file changes
+- **🔄 Watch Mode** - Automatic rebuilding on file changes
+- **📦 Production Builds** - Minification support for optimized output
 - **📄 Page Generator** - Quickly create new pages with templates
 - **🚀 Zero Configuration** - Just point and build
 
@@ -72,10 +73,14 @@ snapp page home
 snapp page about
 snapp page contact
 
-# 3. Start building (watches for changes)
+# 3. Start building (one-time build)
 snapp build
 
-# 4. Edit files in views/ folder - they automatically compile to src/
+# 4. Or watch for changes during development
+snapp build -W
+
+# 5. Build minified for production
+snapp build -M
 ```
 
 **Or use in any existing folder:**
@@ -109,9 +114,13 @@ my-project/
 ├── views/
 │   ├── index.jsx       # Your JSX files go here
 │   └── components/
-├── src/
+|
+├── src/ 
+│   ├── snapp.jsx       # snapp run time
+│   ├── index.jsx       # Build file
+│   └── components/
+|
 ├── index.html          # HTML templates
-├── snapp.js           # Framework file
 └── README.md
 ```
 
@@ -143,19 +152,32 @@ snapp build
 #    ✅ src/contact.js (auto-compiled vanilla JS)
 ```
 
-### `snapp build`
+### `snapp build [options]`
 
 **The main command** - compiles JSX/TSX files from `views/` to `src/` folder.
 
 ```bash
+# One-time build (exits after completion)
 snapp build
+
+# Watch mode (rebuilds on file changes)
+snapp build -W
+snapp build --watch
+
+# Minified build (production-ready)
+snapp build -M
+snapp build --minify
+
+# Combine flags (watch + minify)
+snapp build -W -M
+snapp build --watch --minify
 ```
 
 **What happens:**
-- Watches `views/` folder for changes
 - Compiles `.jsx`, `.tsx`, `.ts`, `.js` files using **esbuild**
 - Outputs vanilla JavaScript to `src/` folder
-- Runs continuously until you stop it (Ctrl+C)
+- In watch mode: runs continuously until you stop it (Ctrl+C)
+- Without watch mode: exits after successful build
 
 ### `snapp --help` / `snapp --version`
 
@@ -231,12 +253,51 @@ snapp page portfolio
 # ✅ portfolio.html (in root)
 # ✅ views/portfolio.jsx (JSX component)
 
-# Compile it
+# Compile it once
 snapp build
-# ✅ Creates src/portfolio.js automatically
+# ✅ Creates src/portfolio.js automatically and exits
+
+# Or watch for changes during development
+snapp build -W
+# ✅ Rebuilds automatically when you edit files
 ```
 
-### Example 2: Use in Any Folder
+### Example 2: Development Workflow
+
+```bash
+# Start a new project
+snapp create my-blog
+cd my-blog
+
+# Generate pages
+snapp page home
+snapp page blog
+snapp page about
+
+# Start watch mode for development
+snapp build -W
+
+# Now edit views/blog.jsx - it auto-compiles to src/blog.js
+# Keep coding, it keeps building! 🔄
+```
+
+### Example 3: Production Build
+
+```bash
+# Regular build (development)
+snapp build
+# Output: src/index.js (readable, not minified)
+
+# Production build (minified)
+snapp build -M
+# Output: src/index.js (minified, smaller file size)
+
+# Test production build with watch mode
+snapp build -W -M
+# Rebuilds with minification on every change
+```
+
+### Example 4: Use in Any Folder
 
 ```bash
 # Go to any folder
@@ -247,12 +308,16 @@ cd my-simple-site
 snapp page home
 snapp page about
 
-# Build them
+# One-time build
 snapp build
-# ✅ Creates src/home.js and src/about.js automatically
+# ✅ Builds once and exits
+
+# Or watch mode
+snapp build -W
+# ✅ Keeps running and rebuilding
 ```
 
-### Example 3: Working with Existing Projects
+### Example 5: Working with Existing Projects
 
 ```bash
 # You have an existing snapp project
@@ -264,10 +329,15 @@ snapp page contact
 
 # Just start building
 snapp build
-# ✅ Compiles all JSX/TSX files in views/ folder
+# ✅ Compiles all JSX/TSX files in views/ folder once
+
+# Or use watch mode
+snapp build -W
+# ✅ Continuous compilation
 ```
 
-### Example 4: Complete Project Structure
+### Example 6: Complete Project Structure
+
 ```
 my-snapp-app/
 ├── views/           # 🎯 Source JSX/TSX components
@@ -276,19 +346,22 @@ my-snapp-app/
 │   ├── user.jsx     # User profile component
 │   └── components/  # Reusable components
 │       ├── Header.jsx
-|       └── UserCard.jsx
-|    
-├── src/             # 📦 JS files (auto-generated)
-│   ├── index.js
+│       ├── Footer.jsx
+│       └── UserCard.jsx
+|
+├── src/ # 📦 Built JS files (snapp build)
+│   ├── snapp.js   # Snapp runtime
+|   ├── index.js
 │   ├── about.js
 │   └── user.js
+|
 ├── index.html       # 📄 Homepage template
 ├── about.html       # 📄 About page template
 ├── user.html        # 📄 User page template
-└── snapp.js         # ⚡ Snapp core library
+└── 
 ```
 
-### Example 5: Generated Page Template
+### Example 7: Generated Page Template
 
 When you run `snapp page contact`, here's what gets created:
 
@@ -308,7 +381,7 @@ When you run `snapp page contact`, here's what gets created:
 
 **views/contact.jsx:**
 ```jsx
-import snapp from '../snapp.js';
+import snapp from "../src/snapp.js"
 
 const Contact = () => {
     return (
@@ -326,7 +399,7 @@ snapp.render(snappBody, Contact());
 **After `snapp build` → src/contact.js:**
 ```javascript
 // Auto-generated vanilla JavaScript
-import snapp from '../snapp.js';
+import snapp from './snapp.js';
 
 const Contact = () => {
     return snapp.createElement('div', { className: 'contact-page' },
@@ -348,8 +421,12 @@ snapp.render(snappBody, Contact());
 #### "Do I need to install Snapp Kit in every project?"
 **No!** Install once globally, use everywhere.
 
-#### "Do I need package.json or node_modules?"
-**No!** Snapp Kit works without any project dependencies.
+#### "When should I use watch mode vs regular build?"
+- **Regular build** (`snapp build`): Quick one-time compilation, CI/CD, deployment scripts
+- **Watch mode** (`snapp build -W`): Active development, auto-rebuild on file changes
+
+#### "When should I use minification?"
+Use `-M` or `--minify` for production deployments to reduce file sizes. Not needed during development.
 
 #### "Can I use it in an existing website?"
 **Yes!** Just create a `views/` folder and start building.
@@ -357,8 +434,8 @@ snapp.render(snappBody, Contact());
 #### "What if I don't have a views/ folder?"
 Snapp Kit will show an error. Create the folder and add your JSX files there.
 
-#### "Can I customize the page templates?"
-**Yes!** Modify the `page/` folder in your Snapp Kit installation directory.
+#### "Can I customize this?"
+**Yes!** You can clone the repo from github and also send pull request
 
 ### Common Issues
 
@@ -389,9 +466,17 @@ ls views/
 # Make sure files have correct extensions (.jsx, .tsx, .ts, .js)
 ls views/*.jsx
 
-# Restart the build process
+# Try a one-time build first
 snapp build
+
+# Then try watch mode
+snapp build -W
 ```
+
+#### Build doesn't exit
+If you ran `snapp build -W` (watch mode) and want it to stop:
+- Press `Ctrl+C` to exit watch mode
+- Use `snapp build` (no flags) for one-time builds that exit automatically
 
 #### Permission errors
 ```bash
@@ -412,6 +497,11 @@ sudo npm install -g snapp-kit
 - Install once, use anywhere
 - Works in any folder on your system
 - Just `snapp build` and you're done
+
+**✅ Flexible Build Modes**
+- One-time builds for quick compilation
+- Watch mode for active development
+- Minification for production deployments
 
 **✅ Instant Page Generation**
 - `snapp page <name>` creates ready-to-use templates
