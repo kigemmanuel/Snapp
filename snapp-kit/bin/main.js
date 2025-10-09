@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 
 // Snapp framework version (update this manually)
-const SNAPP_VERSION = '2.1.0';
+const SNAPP_VERSION = '2.1.1';
 // Snapp framework version (update this manually)
 
 

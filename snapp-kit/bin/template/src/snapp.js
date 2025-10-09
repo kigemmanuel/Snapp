@@ -1,9 +1,9 @@
 
 /*!
- * Snapp Framework v2.1.0
+ * Snapp Framework v2.1.1
  * A lightweight JSX-like framework for vanilla JavaScript
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @license MIT
  * @repository https://github.com/kigemmanuel/Snapp
  *
@@ -447,10 +447,14 @@ const snapp = (() => {
   
         if (dynamic.type === "node") {
           dynamic.node.nodeValue = newTemp;
-        } else if (dynamic.type === "attr") {
+        } 
+        
+        else if (dynamic.type === "attr") {
           element.setAttribute(dynamic.attr, newTemp)
-        } else if (dynamic.type === "style") {
-          if (newTemp.includes('-')) {
+        }
+        
+        else if (dynamic.type === "style") {
+          if (dynamic.prop.includes('-')) {
             element.style.setProperty(dynamic.prop, newTemp);
           } else {
             element.style[dynamic.prop] = newTemp;
