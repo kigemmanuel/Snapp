@@ -1,6 +1,6 @@
 /**
  * Snapp Framework - Main Entry Point
- * Exports all public APIs and types
+ * Exports all types
  */
 
 import snapp from "./core";

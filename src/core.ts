@@ -52,6 +52,8 @@ const dynamicDependencies = new Map<Element, SubscribeData[]>();
 const eventListener: Record<string, EventHandler> = {};
 const elementEvent: Record<string, Record<number, EventHandler>> = {};
 
+const running = () => "Snapp is running!";
+
 /**
  * Flattens nested children arrays into a single array
  */
@@ -559,8 +561,16 @@ const updateDynamicValue = (element: Element, items: number[]): void => {
 
       if (dynamic.type === "node" && dynamic.node) {
         dynamic.node.nodeValue = newTemp;
+
       } else if (dynamic.type === "attr" && dynamic.attr) {
-        element.setAttribute(dynamic.attr, newTemp);
+
+        // Handle input/form element properties
+        if ((element as any)[dynamic.attr] !== undefined) {
+          (element as any)[dynamic.attr] = newTemp;
+        } else {
+          element.setAttribute(dynamic.attr, newTemp);
+        }
+
       } else if (dynamic.type === "style" && dynamic.prop) {
         if (newTemp.includes("-")) {
           (element as any).style.setProperty(dynamic.prop, newTemp);
@@ -696,6 +706,7 @@ const snapp = {
   removestyle,
   remove,
   dynamic,
+  running,
 };
 
 export default snapp;
